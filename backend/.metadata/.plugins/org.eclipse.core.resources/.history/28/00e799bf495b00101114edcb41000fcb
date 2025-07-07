@@ -1,0 +1,46 @@
+
+import com.example.board.domain.member.Member;
+import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
+
+/**
+ * Spring Security가 사용자를 인식할 수 있도록 Member 엔티티를 감싸는 클래스입니다.
+ * 사용자의 '신분증' 역할을 합니다.
+ */
+@Getter
+public class CustomUserDetails implements UserDetails {
+
+    private final Member member;
+
+    public CustomUserDetails(Member member) {
+        this.member = member;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(member.getRole().getKey()));
+    }
+
+    @Override
+    public String getPassword() {
+        return member.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        // Spring Security에서 username은 고유 식별자를 의미합니다.
+        // 우리 시스템에서는 email을 고유 식별자로 사용합니다.
+        return member.getEmail();
+    }
+
+    // --- 계정 상태 관련 메소드들 (모두 true로 설정하여 활성화) ---
+    @Override public boolean isAccountNonExpired() { return true; }
+    @Override public boolean isAccountNonLocked() { return true; }
+    @Override public boolean isCredentialsNonExpired() { return true; }
+    @Override public boolean isEnabled() { return true; }
+}

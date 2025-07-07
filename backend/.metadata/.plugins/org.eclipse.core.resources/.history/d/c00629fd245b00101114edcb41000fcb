@@ -1,0 +1,11 @@
+package com.example.board.domain.member;
+
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+@RequestMapping("/api")
+@RequiredArgsConstructor
+public class MemberController {
+
+}

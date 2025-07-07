@@ -1,0 +1,7 @@
+package com.example.board.domain.member;
+
+public interface MemberRepository {
+
+	boolean existsByEmail(String email);
+
+}

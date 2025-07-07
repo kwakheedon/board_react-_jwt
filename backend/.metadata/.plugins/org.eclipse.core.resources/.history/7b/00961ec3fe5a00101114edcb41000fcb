@@ -1,0 +1,5 @@
+package com.example.board.comment;
+
+public class Comment {
+
+}

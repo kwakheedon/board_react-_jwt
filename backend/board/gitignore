@@ -1,0 +1,26 @@
+# Eclipse
+.metadata/
+bin/
+*.class
+.settings/
+.project
+.classpath
+
+# Spring Boot / Java
+target/
+*.log
+*.tmp
+
+# Gradle
+.gradle/
+build/
+
+# OS 관련
+.DS_Store
+Thumbs.db
+
+# IDE 관련
+.vscode/
+
+# 기타
+*.swp

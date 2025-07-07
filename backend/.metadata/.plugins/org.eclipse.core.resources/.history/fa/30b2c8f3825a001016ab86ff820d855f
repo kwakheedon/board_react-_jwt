@@ -1,0 +1,5 @@
+package com.example.board.auth.dto;
+
+public class UserReq {
+
+}

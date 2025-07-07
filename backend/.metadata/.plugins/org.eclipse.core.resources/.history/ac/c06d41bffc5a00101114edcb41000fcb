@@ -1,0 +1,51 @@
+package com.example.board.member;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "members") // 테이블 이름은 보통 소문자 복수형을 사용합니다.
+public class Member {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 100)
+    private String email; // 로그인 ID로 사용
+
+    @Column(nullable = false)
+    private String password; // 암호화된 비밀번호
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String nickname;
+
+    @Enumerated(EnumType.STRING) // Enum의 이름을 DB에 문자열로 저장
+    @Column(nullable = false)
+    private Role role;
+
+    // 'mappedBy'는 Post 엔티티에 있는 Member 타입 필드 이름("member")을 가리켜야 합니다.
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
+
+    // 'mappedBy'는 Comment 엔티티에 있는 Member 타입 필드 이름("member")을 가리켜야 합니다.
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @Builder
+    public Member(String email, String password, String nickname, Role role) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.role = role;
+    }
+}

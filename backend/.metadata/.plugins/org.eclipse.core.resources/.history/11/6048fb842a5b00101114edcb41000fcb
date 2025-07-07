@@ -1,0 +1,32 @@
+package com.example.board.domain.member;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.example.board.domain.member.dto.SignUpReq;
+import com.example.board.exception.CustomException;
+import com.example.board.exception.ErrorCode;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class MemberService {
+	private final MemberRepository memberRepository;
+	private final PasswordEncoder passwordEncoder;
+
+	@Transactional
+	public void signup(SignUpReq request) {
+		if (memberRepository.existsByEmail(request.getEmail())) {
+			throw new CustomException(ErrorCode.USER_ALREADY_EXISTS, "이미 사용 중인 이메일입니다.");
+		}
+		String encryptedPassword = passwordEncoder.encode(request.getPassword());
+
+		Member member = Member.builder().email(request.getEmail()).password(encryptedPassword) // 👈 암호화된 비밀번호를 저장
+				.nickname(request.getNickname()).role(Role.USER).build();
+
+		memberRepository.save(member);
+
+	}
+}
