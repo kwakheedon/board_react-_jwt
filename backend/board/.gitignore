@@ -1,33 +1,27 @@
-HELP.md
+# Secret properties
+application-secret.properties
+
+# Build files
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+*.jar
+*.war
+*.ear
 
-### STS ###
-.apt_generated
+# Log files
+*.log
+
+# IDE files (Eclipse)
 .classpath
-.factorypath
 .project
-.settings
-.springBeans
-.sts4-cache
+.settings/
+.metadata
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# IDE files (IntelliJ)
+.idea/
 *.iml
-*.ipr
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# Mac/OSX
+.DS_Store
 
-### VS Code ###
-.vscode/
+# Windows
+Thumbs.db
