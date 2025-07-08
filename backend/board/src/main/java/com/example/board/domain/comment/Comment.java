@@ -57,4 +57,5 @@ public class Comment {
         this.post = post;
         this.parent = parent;
     }
+    
 }

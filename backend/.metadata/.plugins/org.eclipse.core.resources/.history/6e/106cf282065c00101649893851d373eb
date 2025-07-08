@@ -1,0 +1,63 @@
+package com.example.board.domain.member;
+
+import com.example.board.domain.member.dto.LoginReq;
+import com.example.board.domain.member.dto.SignUpReq;
+import com.example.board.exception.CustomException;
+import com.example.board.exception.ErrorCode;
+import com.example.board.security.jwt.JwtUtil;
+import com.example.board.security.jwt.TokenResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class MemberService {
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil; // JwtUtil 의존성 주입
+
+    //회원가입
+    @Transactional
+    public void signup(SignUpReq request) {
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new CustomException(ErrorCode.USER_ALREADY_EXISTS, "이미 사용 중인 이메일입니다.");
+        }
+        String encryptedPassword = passwordEncoder.encode(request.getPassword());
+        Member member = Member.builder()
+                .email(request.getEmail())
+                .password(encryptedPassword)
+                .nickname(request.getNickname())
+                .role(Role.user)
+                .build();
+        memberRepository.save(member);
+    }
+
+    /**
+     * 로그인
+     * 1. 사용자 인증 (이메일, 비밀번호 확인)
+     * 2. Access Token, Refresh Token 생성
+     * 3. Refresh Token을 DB에 저장 (업데이트)
+     * 4. 토큰들을 DTO에 담아 반환
+     */
+    @Transactional
+    public TokenResponse login(LoginReq loginReq) {
+        // 1. 사용자 인증
+        Member member = memberRepository.findByEmail(loginReq.getEmail())
+                .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAIL, "이메일 또는 비밀번호가 일치하지 않습니다."));
+        if (!passwordEncoder.matches(loginReq.getPassword(), member.getPassword())) {
+            throw new CustomException(ErrorCode.LOGIN_FAIL, "이메일 또는 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 2. Access Token, Refresh Token 생성
+        String accessToken = jwtUtil.generateAccessToken(member.getId(), member.getRole());
+        String refreshToken = jwtUtil.generateRefreshToken(member.getId());
+
+        // 3. Refresh Token을 Member 엔티티에 저장 (변경 감지)
+        member.updateRefreshToken(refreshToken);
+
+        // 4. 생성된 토큰들을 DTO에 담아 반환
+        return new TokenResponse(accessToken, refreshToken);
+    }
+}

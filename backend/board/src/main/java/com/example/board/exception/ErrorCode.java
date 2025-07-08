@@ -11,7 +11,9 @@ public enum ErrorCode {
     // Member
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "M001", "사용자를 찾을 수 없습니다."),
     USER_ALREADY_EXISTS(HttpStatus.CONFLICT, "M002", "이미 가입된 사용자입니다."),
+    NICKNAME_ALREADY_EXISTS(HttpStatus.CONFLICT, "M002", "이미 사용중인 닉네임입니다."),
     LOGIN_FAIL(HttpStatus.UNAUTHORIZED, "M003", "이메일 또는 비밀번호가 일치하지 않습니다."),
+    
 
     // Token
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "T001", "유효하지 않은 토큰입니다."),
