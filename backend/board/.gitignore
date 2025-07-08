@@ -25,3 +25,7 @@ target/
 
 # Windows
 Thumbs.db
+
+
+# Eclipse metadata
+backend/.metadata/
