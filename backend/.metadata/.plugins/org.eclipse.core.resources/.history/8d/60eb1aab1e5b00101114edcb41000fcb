@@ -1,5 +1,0 @@
-package com.example.board.post;
-
-public interface PostRepository {
-
-}

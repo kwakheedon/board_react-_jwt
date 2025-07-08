@@ -1,5 +1,0 @@
-package com.example.board.security.jwt.dto;
-
-public class ReissueReq {
-
-}

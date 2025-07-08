@@ -1,5 +1,0 @@
-package com.example.board.global;
-
-public class ApiResponse<T> {
-
-}
