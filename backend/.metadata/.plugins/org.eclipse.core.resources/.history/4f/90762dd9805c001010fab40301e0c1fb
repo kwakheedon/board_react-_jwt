@@ -1,0 +1,24 @@
+package com.example.board.domain.member.dto;
+
+import com.example.board.domain.member.Member;
+import com.example.board.domain.member.Role;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class LoginRes {
+    private String email;
+    private String nickname;
+    private Role role;
+    
+    
+    public LoginRes(Member member) {
+        this.email = member.getEmail();
+        this.nickname = member.getNickname();
+        this.role = member.getRole();
+    } 
+}

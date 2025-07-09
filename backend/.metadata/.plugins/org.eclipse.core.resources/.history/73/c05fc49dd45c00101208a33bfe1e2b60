@@ -1,0 +1,16 @@
+package com.example.board.domain.post.dto;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE) // 외부에서 생성자 직접 호출을 막습니다.
+public class PostDetailRes {
+
+    private Long postId;
+    private String title;
+    private String content;
+ 
+
+}

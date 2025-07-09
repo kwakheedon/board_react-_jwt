@@ -1,0 +1,12 @@
+package com.example.board.domain.post;
+
+import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class PostService {
+	private final PostRepository postRepository;
+	
+}
