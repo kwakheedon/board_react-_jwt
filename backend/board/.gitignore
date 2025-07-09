@@ -29,3 +29,7 @@ Thumbs.db
 
 # Eclipse metadata
 backend/.metadata/
+
+# application-secret.properties 또는 application-dev.properties 와 같은
+# 민감한 정보를 담은 설정 파일은 Git에 올리지 않도록 제외합니다.
+application-*.properties

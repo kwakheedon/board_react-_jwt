@@ -1,51 +1,54 @@
 package com.example.board.security.jwt;
 
-
 import com.example.board.domain.member.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment; // Environment 임포트
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Objects;
 
 @Slf4j(topic = "JwtUtil")
 @Component
+@RequiredArgsConstructor // final 필드에 대한 생성자 자동 주입
 public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String AUTHORIZATION_KEY = "auth";
     public static final String BEARER_PREFIX = "Bearer ";
 
-    @Value("${jwt.secret.key}")
-    private String secretKey;
+    // @Value 대신 Environment 객체를 주입받습니다.
+    private final Environment environment;
 
-    @Value("${jwt.access.token.expiration.ms}")
     private long accessTokenExpirationMs;
-
-    @Value("${jwt.refresh.token.expiration.ms}")
     private long refreshTokenExpirationMs;
-
     private Key signingKey;
 
     @PostConstruct
     public void init() {
-        // application.properties의 secretKey는 Base64로 인코딩된 값이어야 합니다.
+        // Environment 객체에서 직접 프로퍼티 값을 가져와서 변수에 할당합니다.
+        String secretKey = Objects.requireNonNull(environment.getProperty("jwt.secret.key"), "jwt.secret.key a value must be entered.");
+        this.accessTokenExpirationMs = Long.parseLong(Objects.requireNonNull(environment.getProperty("jwt.access-token-expiration-ms")));
+        this.refreshTokenExpirationMs = Long.parseLong(Objects.requireNonNull(environment.getProperty("jwt.refresh-token-expiration-ms")));
+
         byte[] keyBytes = Base64.getDecoder().decode(secretKey);
         this.signingKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // 토큰 생성 (주체: email)
+    // AccessToken 생성
     public String generateAccessToken(String email, Role role) {
         Date now = new Date();
         Claims claims = Jwts.claims().setSubject(email);
-        claims.put(AUTHORIZATION_KEY, role.getKey());
+        // role.getKey() 대신 role.name()을 사용합니다.
+        claims.put(AUTHORIZATION_KEY, role.name());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -55,9 +58,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    /**
-     * Refresh Token 생성 (주체를 email로 변경)
-     */
+    // RefreshToken 생성
     public String generateRefreshToken(String email) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + refreshTokenExpirationMs);
@@ -70,6 +71,7 @@ public class JwtUtil {
                 .compact();
     }
 
+    // 요청에서 토큰 정보 추출
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
@@ -78,6 +80,7 @@ public class JwtUtil {
         return null;
     }
 
+    // 토큰 유효성 검증
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
@@ -94,6 +97,7 @@ public class JwtUtil {
         return false;
     }
 
+    // 토큰에서 Claims 추출
     public Claims getClaimsFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(signingKey)
@@ -102,9 +106,7 @@ public class JwtUtil {
                 .getBody();
     }
 
-    /**
-     * 토큰에서 사용자 이메일을 추출합니다.
-     */
+    // 토큰에서 사용자 이메일 추출
     public String getEmailFromToken(String token) {
         return getClaimsFromToken(token).getSubject();
     }
