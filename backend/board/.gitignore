@@ -1,31 +1,9 @@
-# Secret properties
-application-secret.properties
-
-# Build files
-target/
-*.jar
-*.war
-*.ear
-
-# Log files
+# Eclipse IDE 설정 및 캐시 무시
+.metadata/
 *.log
-
-# IDE files (Eclipse)
-.classpath
-.project
-.settings/
-.metadata
-
-# IDE files (IntelliJ)
-.idea/
-*.iml
-
-# Mac/OSX
-.DS_Store
-
-# Windows
-Thumbs.db
-
+*.swp
+*.tmp
+*.class
 
 # Eclipse metadata
 backend/.metadata/
@@ -33,3 +11,5 @@ backend/.metadata/
 # application-secret.properties 또는 application-dev.properties 와 같은
 # 민감한 정보를 담은 설정 파일은 Git에 올리지 않도록 제외합니다.
 application-*.properties
+
+echo ".metadata/" >> backend/.gitignore
