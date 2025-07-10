@@ -1,0 +1,22 @@
+package com.example.board.domain.post.dto;
+
+import lombok.Builder;
+import lombok.Getter;
+
+
+@Getter
+public class PostAllRes {
+	  private  Long postId;
+	  private  String title;
+	  private  String writerNickname;
+	  
+	  @Builder
+	    private PostSimpleRes(Long postId, String title, String writerNickname) {
+	        this.postId = postId;
+	        this.title = title;
+	        this.writerNickname = writerNickname;
+	       
+	    }
+	  
+	
+}

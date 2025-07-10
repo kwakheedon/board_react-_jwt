@@ -30,26 +30,39 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id; //작성자ID
 
     @Column(nullable = false, length = 200)
-    private String title;
+    private String title; //제목
 
     @Lob
     @Column(nullable = false)
-    private String content;
+    private String content; // 게시글내용
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Member member; // 작성자 
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
-
+    
     @Builder
     public Post(String title, String content, Member member) {
         this.title = title;
         this.content = content;
         this.member = member;
     }
+
+
+    // title만 수정하는 메소드
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    // content만 수정하는 메소드
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+	
 }

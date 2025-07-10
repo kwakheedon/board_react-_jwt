@@ -19,7 +19,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // 회원가입
+    /// 회원가입
     @Transactional
     public void signup(SignUpReq request) {
         if (memberRepository.existsByEmail(request.getEmail())) {
@@ -35,7 +35,7 @@ public class MemberService {
         memberRepository.save(member);
     }
     
-    // 로그인
+    /// 로그인
     @Transactional
     public TokenResponse login(LoginReq loginReq) {
         Member member = memberRepository.findByEmail(loginReq.getEmail())
@@ -52,7 +52,7 @@ public class MemberService {
         return TokenResponse.fromEntity(access, refresh);
     }
     
-    // 토큰 재발급
+    /// 토큰 재발급
     @Transactional
     public TokenResponse reissueToken(String refreshTokenValue) {
         if (!jwtUtil.validateToken(refreshTokenValue)) {
@@ -81,7 +81,7 @@ public class MemberService {
         return new TokenResponse(accessToken, newRefreshTokenValue);
     }
     
-    //로그아웃
+    ///로그아웃
     @Transactional
     public void logout(String refreshToken) {
         String email = jwtUtil.getEmailFromToken(refreshToken);

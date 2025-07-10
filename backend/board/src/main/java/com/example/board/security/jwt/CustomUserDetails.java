@@ -31,7 +31,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        // Spring Security에서 username은 유일한 식별자를 의미. 여기서는 email을 사용
+        // Spring Security에서 유일한 식별자를 의미. 여기서는 email을 사용
         return member.getEmail();
     }
 
