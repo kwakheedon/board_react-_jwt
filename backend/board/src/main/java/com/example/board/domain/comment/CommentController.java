@@ -1,13 +1,19 @@
 package com.example.board.domain.comment;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.board.domain.comment.dto.CommentReq;
+import com.example.board.domain.comment.dto.CommentRes;
+import com.example.board.domain.post.dto.PostDetailRes;
 import com.example.board.exception.ApiResponse;
 import com.example.board.security.jwt.CustomUserDetails;
 
@@ -28,5 +34,14 @@ public class CommentController {
         commentService.createComment(req, userDetails.getMember().getEmail());
         return ResponseEntity.ok(ApiResponse.success("댓글 작성 성공", null));
     }
+
+	
+	///댓글조회 
+	@GetMapping("/posts/{postId}/comments")
+	public ResponseEntity<ApiResponse<List<CommentRes>>> readComments(@PathVariable Long postId) {
+	    List<CommentRes> commentList = commentService.readComments(postId);
+	    return ResponseEntity.ok(ApiResponse.success("댓글 조회 성공", null));
+	}
+	
 }
 

@@ -1,9 +1,13 @@
 package com.example.board.domain.comment;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.board.domain.comment.dto.CommentReq;
+import com.example.board.domain.comment.dto.CommentRes;
 import com.example.board.domain.member.Member;
 import com.example.board.domain.member.MemberRepository;
 import com.example.board.domain.post.Post;
@@ -26,12 +30,9 @@ public class CommentService {
         // 정보를 이메일로 조회
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다."));
-
         //댓글을 달 게시글(Post)을 postId로 조회
         Post post = postRepository.findById(req.getPostId())
                 .orElseThrow(() -> new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "댓글을 작성할 게시글이 없습니다."));
-
-        // 빌더를 사용하여 새로운 Comment 엔티티를 생성
         Comment comment = Comment.builder()
                 .content(req.getContent())
                 .member(member) // 작성자 정보 설정
@@ -39,6 +40,22 @@ public class CommentService {
                 .build();
         commentRepository.save(comment);
     }
+	
+	///댓글조회
+	@Transactional(readOnly = true)
+	public List<CommentRes> readComments(Long postId) {
+		// 게시글 확인
+	    if (!postRepository.existsById(postId)) {
+	        throw new CustomException(ErrorCode.RESOURCE_NOT_FOUND, "댓글을 조회할 게시글이 없습니다.");
+	    }
+	    // Repository를 사용해 특정 게시글(postId)의 모든 댓글 조회
+	    List<Comment> comments = commentRepository.findAllByPostId(postId);
+	    // 조회한 Comment 엔티티 리스트를 CommentResponse DTO 리스트로 변환하여 반환
+	    return comments.stream()
+	            .map(CommentRes::from)
+	            .collect(Collectors.toList());
+	}
+	
 	
 
 }
