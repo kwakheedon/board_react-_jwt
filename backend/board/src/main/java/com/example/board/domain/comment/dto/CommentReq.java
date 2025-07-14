@@ -15,7 +15,7 @@ public class CommentReq {
     private String content;
 
     
-    // 대댓글 기능을 위한 부모 댓글 ID (선택적 기능)
-    // private Long parentId;
+    // 대댓글 기능을 위한 부모 댓글 ID
+     private Long parentId;
     
 }
