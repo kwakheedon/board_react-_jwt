@@ -1,9 +1,0 @@
-# JWT \uAD00\uB828 \uC124\uC815
-jwt.secret.key=eW91ci1zdXBlci1zZWNyZXQta2V5LWZvci10aGlzLWJvYXJkLXByb2plY3QtdGhhdC1pcy12ZXJ5LWxvbmctYW5kLXNlY3VyZQ==
-jwt.access-token-expiration-ms=3600000
-jwt.refresh-token-expiration-ms=86400000
-
-# \uB370\uC774\uD130\uBCA0\uC774\uC2A4 \uC5F0\uACB0 \uC815\uBCF4
-spring.datasource.url=jdbc:mysql://localhost:3306/board
-spring.datasource.username=myuser
-spring.datasource.password=mypassword

@@ -1,0 +1,54 @@
+############################
+#  Node / React Frontend
+############################
+# Dependencies
+frontend/node_modules/
+
+# Build output
+frontend/build/
+frontend/dist/
+
+# Testing coverage
+frontend/coverage/
+
+############################
+#  Java / Spring Boot Backend
+############################
+# Maven & Gradle build
+backend/target/
+backend/build/
+backend/.gradle/
+
+# Eclipse IDE metadata (백엔드용 워크스페이스 폴더)
+backend/.metadata/
+backend/.classpath
+backend/.project
+backend/.settings/
+
+############################
+#  IDE / Editors (공통)
+############################
+.idea/
+.vscode/
+*.suo
+*.sw?
+*.njsproj
+*.sln
+
+############################
+#  OS / System Files
+############################
+.DS_Store
+Thumbs.db
+
+############################
+#  Logs
+############################
+logs/
+*.log
+
+############################
+#  Environment & Secrets
+############################
+.env*
+application-*.properties
