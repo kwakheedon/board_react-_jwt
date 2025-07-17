@@ -2,16 +2,14 @@ import React from 'react'
 import Header from './Header'       
 import Footer from './Footer'       
 import { Outlet } from 'react-router-dom'  
-import SignUpModal from '../auth/SignUpModal';
-import LoginModal from '../auth/LoginModal';
+import SignUpForm from '../auth/signUp/SignUpForm';
 
 
 const MainLayout = () => {
   return (
     <div>
       <Header />
-      <SignUpModal /> 
-      <LoginModal />
+      <SignUpForm /> 
 
       <main>
         <Outlet />
