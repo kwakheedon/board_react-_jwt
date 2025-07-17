@@ -35,7 +35,7 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable);
 
-        // ⭐ 2. CORS 설정 추가 (가장 중요!)
+        // 2. CORS 설정 추가 (가장 중요!)
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         // 3. 경로별 접근 권한 설정
@@ -51,7 +51,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ⭐ CORS 설정을 위한 Bean. 프론트엔드와의 통신을 위해 반드시 필요합니다.
+    //CORS 설정을 위한 Bean. 프론트엔드와의 통신을 위해 반드시 필요합니다.
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
