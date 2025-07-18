@@ -41,7 +41,11 @@ public class SecurityConfig {
         // 3. 경로별 접근 권한 설정
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/signup", "/api/reissue").permitAll()
+                .requestMatchers("/api/login", 
+                		 "/api/signup", 
+                		 "/api/reissue",
+                		 "/api/posts",
+                         "/api/posts/**").permitAll()
                 .anyRequest().authenticated()
             );
             
@@ -58,7 +62,7 @@ public class SecurityConfig {
         
         // 허용할 프론트엔드 Origin 설정 (예: http://localhost:3000)
         configuration.setAllowedOrigins(List.of(
-        	    "http://localhost:3001")); 
+        	    "http://localhost:3000")); 
         
         // 허용할 HTTP 메서드 (GET, POST, 등)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
