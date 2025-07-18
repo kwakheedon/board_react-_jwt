@@ -1,15 +1,15 @@
 import React from 'react';
-import TextField from '../../common/TextField';
-import Button from '../../common/Button';
+import TextField from '../common/TextField';
+import Button from '../common/Button';
 
-const SignUpModal = ({ 
-  isOpen, 
-  onClose, 
-  formData, 
-  onChange, 
-  onSubmit, 
-  loading, 
-  error 
+const LoginModal = ({
+  isOpen,
+  onClose,
+  formData,
+  onChange,
+  onSubmit,
+  loading,
+  error
 }) => {
   // isOpen이 false면 아무것도 그리지 않음
   if (!isOpen) {
@@ -19,7 +19,7 @@ const SignUpModal = ({
   return (
     <div className="modal-background" onClick={onClose}>
       <div className="modal-content" onClick={e => e.stopPropagation()}>
-        <h2>회원가입</h2>
+        <h2>로그인</h2>
         
         {/* onSubmit 이벤트는 form 태그에 직접 연결 */}
         <form onSubmit={onSubmit}>
@@ -39,17 +39,9 @@ const SignUpModal = ({
             onChange={onChange}
             required
           />
-          <TextField
-            type="text"
-            name="nickname"
-            placeholder="닉네임"
-            value={formData.nickname || ''}
-            onChange={onChange}
-            required
-          />
           {error && <p>{error}</p>}
           <Button type="submit" disabled={loading}>
-            {loading ? '가입 중...' : '회원가입'}
+            {loading ? '로그인 중...' : '로그인'}
           </Button>
         </form>
         
@@ -61,4 +53,4 @@ const SignUpModal = ({
   );
 };
 
-export default SignUpModal;
+export default LoginModal;

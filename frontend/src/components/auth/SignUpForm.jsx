@@ -1,6 +1,6 @@
 import React from 'react';
 import SignUpModal from './SignUpModal'; 
-import { useAuthStore } from '../../../stores/useAuthStore';
+import { useAuthStore } from '../../stores/useAuthStore';
 
 
 const SignUpForm = () => {
@@ -18,6 +18,7 @@ const SignUpForm = () => {
   } = useAuthStore();
 
   // 2. 이벤트 핸들러(로직)는 그대로 유지합니다.
+  //  
   const onChange = (e) => {
     clearError();
     const { name, value } = e.target;

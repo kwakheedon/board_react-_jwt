@@ -1,142 +1,135 @@
 import { create } from 'zustand';
 import { authApi } from '../api/authApi';
 
+const initialFormData = {
+  email: '',
+  password: '',
+  nickname: ''
+};
+
 export const useAuthStore = create((set, get) => ({
-  // 1. 상태 (State)
-  // 사용자 정보 및 인증 관련 상태 추가
+  // 상태
   user: null,
-  isAuthenticated: false,
-  loading: false, // API 호출 시 로딩 상태
-  error: null,    // API 호출 시 에러 메시지
+  isLoggedIn: false,
+  loading: false,
+  error: null,
 
-  // 모달 상태 (기존과 동일)
   isSignUpModalOpen: false,
-  isSignInModalOpen: false,
+  isLoginModalOpen: false,
+  openLogoutModal: false,
 
-  // 폼 데이터 (기존과 동일)
-  formData: {
-    email: '',
-    password: '',
-    nickname: ''
-  },
 
-  // 2. 액션 (Actions)
-  // 폼 데이터 업데이트 (기존과 동일)
-  setFormData: (data) => set((state) => ({
+
+  formData: { ...initialFormData },
+
+  // 액션
+  setFormData: (data) => set(state => ({
     formData: { ...state.formData, ...data }
   })),
 
-  // 에러 메시지 초기화 액션 추가
   clearError: () => set({ error: null }),
 
-  // 모달 열기/닫기 (닫을 때 폼 데이터와 에러 초기화 로직 추가)
   openSignUpModal: () => set({ isSignUpModalOpen: true }),
-  closeSignUpModal: () => set({ 
-    isSignUpModalOpen: false, 
+  closeSignUpModal: () => set({
+    isSignUpModalOpen: false,
     error: null,
-    formData: { email: '', password: '', nickname: '' }
+    formData: { ...initialFormData }
   }),
 
-  openSignInModal: () => set({ isSignInModalOpen: true }),
-  closeSignInModal: () => set({ 
-    isSignInModalOpen: false, 
+  openLoginModal: () => set({ isLoginModalOpen: true }),
+  closeLoginModal: () => set({
+    isLoginModalOpen: false,
     error: null,
-    formData: { email: '', password: '', nickname: '' }
+    formData: { ...initialFormData }
   }),
 
-  // --- 실제 API 통신을 담당하는 핵심 액션들 ---
+  setOpenLogoutModal: (val) => set({ openLogoutModal: val }),
+  
+ 
 
-  // 회원가입 액션
   signup: async () => {
-    const { formData } = get(); // 현재 폼 데이터를 가져옴
-    
-    set({ loading: true, error: null }); // 로딩 시작, 에러 초기화
+    const { formData } = get();
+    set({ loading: true, error: null });
 
     try {
-      // API 호출
       await authApi.signup({
         email: formData.email,
         password: formData.password,
         nickname: formData.nickname
       });
-      
-      // 성공 시
-      set({ 
-        loading: false, 
-        isSignUpModalOpen: false, // 모달 닫기
-        formData: { email: '', password: '', nickname: '' } // 폼 비우기
+      set({
+        loading: false,
+        isSignUpModalOpen: false,
+        formData: { ...initialFormData }
       });
-      
-      alert('회원가입이 완료되었습니다!');
-
+      console.log('회원가입이 완료되었습니다!');
     } catch (error) {
-      // 실패 시
-      set({ 
-        loading: false, 
-        error: error.message || '회원가입에 실패했습니다.' 
+      set({
+        loading: false,
+        error: error.response?.data?.message || error.message || '회원가입에 실패했습니다.'
       });
     }
   },
 
-  // 로그인 액션
-  signin: async () => {
+  login: async () => {
+    const { formData } = get();
     set({ loading: true, error: null });
 
     try {
-      // API 호출
-      const response = await authApi.signin({
-        email: get().formData.email,
-        password: get().formData.password
+      const response = await authApi.login({
+        email: formData.email,
+        password: formData.password
       });
-      
-      // 성공 시 토큰과 사용자 정보를 localStorage에 저장
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
-      
-      // 상태 업데이트
-      set({ 
-        loading: false,
-        isAuthenticated: true,
-        user: response.user,
-        isSignInModalOpen: false, // 모달 닫기
-        formData: { email: '', password: '', nickname: '' }
-      });
+      const { accessToken, refreshToken } = response.data;
 
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+
+      set({
+        loading: false,
+        isLoggedIn: true,
+        isLoginModalOpen: false,
+        formData: { ...initialFormData }
+      });
     } catch (error) {
-      // 실패 시
-      set({ 
-        loading: false, 
-        error: error.message || '로그인에 실패했습니다.' 
+      set({
+        loading: false,
+        error: error.response?.data?.message || error.message || '로그인에 실패했습니다.'
       });
     }
   },
 
-  // 로그아웃 액션
-  signout: () => {
-    // 로컬 스토리지 정리
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    
-    // 상태 초기화
-    set({ 
-      isAuthenticated: false,
-      user: null,
-      formData: { email: '', password: '', nickname: '' }
-    });
-  },
 
-  // 자동 로그인 (앱/새로고침 시작 시)
-  initializeAuth: () => {
-    const token = localStorage.getItem('token');
-    const userStr = localStorage.getItem('user');
+  
+  logout: async () => {
+  const refreshToken = localStorage.getItem('refreshToken');
+  try {
+    if (refreshToken) {
+      await authApi.logout(refreshToken); 
+    }
+  } catch (error) {
+    console.error('로그아웃 API 호출 실패:', error);
+  } finally {
     
-    if (token && userStr) {
-      // 실제로는 여기서 토큰 유효성 검증 API를 한번 더 호출하는 것이 안전합니다.
-      const user = JSON.parse(userStr);
-      set({
-        isAuthenticated: true,
-        user: user
-      });
+    //  클라이언트 상태 정리
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+
+    set({
+      isLoggedIn: false,
+      user: null,
+      formData: { ...initialFormData } 
+    });
+  }
+},
+
+  
+  initializeAuth: () => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      // 여기서 토큰 검증 API 호출 권장
+      set({ isLoggedIn: true });
     }
   }
 }));

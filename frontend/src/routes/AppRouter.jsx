@@ -1,14 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import '../assets/styles/global.css'; // ✅ global.css가 있다면 경로 맞게 조정
+// import '../assets/styles/global.css'; //  global.css가 있다면 경로 맞게 조정
 
 // 레이아웃 컴포넌트
 import MainLayout from '../components/layouts/MainLayout'; 
 
 // 페이지 컴포넌트
 import MainPage from '../pages/MainPage';
-
-
-
 
 const AppRouter = () => {
   return (

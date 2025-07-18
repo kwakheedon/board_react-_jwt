@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 
+//백엔드 API 서버와 통신할 때 인증 토큰 자동 관리 + 재발급 처리까지 한방에 해주는 axios 인스턴스를 만드는 것
 const apiClient = axios.create({
   baseURL: 'http://localhost:8089/api/api',
   timeout: 10000,
@@ -9,12 +10,14 @@ const apiClient = axios.create({
   },
 });
 
-// 요청 인터셉터: 모든 요청 헤더에 Access Token을 자동으로 추가합니다.
+// 요청 인터셉터:  axios 요청하기전에 (로컬)유저에 토큰이 있는지 확인하는
+// axios 요청 시 사용된 설정 객체 (URL, method, headers 등)
+// error.config	에러가 난 요청의 config, 재요청 등에 활용
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token'); // Access Token
+    const token = localStorage.getItem('token'); //클라이언트 로컬스토리지에서 Access Token 읽음
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`; // 요청 헤더에 붙임
     }
     return config;
   },
@@ -24,7 +27,7 @@ apiClient.interceptors.request.use(
 );
 
 
-// ⭐ 응답 인터셉터: 토큰 만료(401) 시 자동으로 재발급을 시도합니다.
+// 'Access Token의 만료'를 감지하고, 자동으로 Refresh Token을 통해 새 토큰을 발급
 apiClient.interceptors.response.use(
   (response) => {
     // 2xx 상태 코드를 가진 응답은 그대로 반환합니다.

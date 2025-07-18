@@ -2,7 +2,9 @@ import React from 'react'
 import Header from './Header'       
 import Footer from './Footer'       
 import { Outlet } from 'react-router-dom'  
-import SignUpForm from '../auth/signUp/SignUpForm';
+import SignUpForm from '../auth/SignUpForm';
+import LoginForm from '../auth/LoginForm';
+import Logout from '../auth/Logout';
 
 
 const MainLayout = () => {
@@ -10,7 +12,8 @@ const MainLayout = () => {
     <div>
       <Header />
       <SignUpForm /> 
-
+      <LoginForm /> 
+      <Logout />
       <main>
         <Outlet />
       </main>
