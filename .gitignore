@@ -26,4 +26,4 @@ backend/.metadata/
 # 민감한 정보를 담은 설정 파일은 Git에 올리지 않도록 제외합니다.
 application-*.properties
 
-echo ".metadata/" >> backend/.gitignore
+echo ".metadata/" >> backend/.gitignorebackend/.metadata/

@@ -1,4 +1,4 @@
-package com.example.board.domain.member.dto;
+package com.example.board.security.jwt.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

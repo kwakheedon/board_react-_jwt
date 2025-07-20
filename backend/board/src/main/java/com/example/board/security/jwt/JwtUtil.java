@@ -25,7 +25,7 @@ public class JwtUtil {
     public static final String AUTHORIZATION_KEY = "auth";
     public static final String BEARER_PREFIX = "Bearer ";
 
-    // @Value 대신 Environment 객체를 주입
+    // @Value 대신 Environment 객체를 주입받습니다.
     private final Environment environment;
 
     private long accessTokenExpirationMs;
@@ -34,7 +34,7 @@ public class JwtUtil {
 
     @PostConstruct
     public void init() {
-        // Environment 객체에서 직접 프로퍼티 값을 가져와서 변수에 할당
+        // Environment 객체에서 직접 프로퍼티 값을 가져와서 변수에 할당합니다.
         String secretKey = Objects.requireNonNull(environment.getProperty("jwt.secret.key"), "jwt.secret.key a value must be entered.");
         this.accessTokenExpirationMs = Long.parseLong(Objects.requireNonNull(environment.getProperty("jwt.access-token-expiration-ms")));
         this.refreshTokenExpirationMs = Long.parseLong(Objects.requireNonNull(environment.getProperty("jwt.refresh-token-expiration-ms")));
@@ -47,7 +47,7 @@ public class JwtUtil {
     public String generateAccessToken(String email, Role role) {
         Date now = new Date();
         Claims claims = Jwts.claims().setSubject(email);
-        // role.getKey() 대신 role.name()을 사용
+        // role.getKey() 대신 role.name()을 사용합니다.
         claims.put(AUTHORIZATION_KEY, role.name());
 
         return Jwts.builder()

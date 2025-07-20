@@ -1,11 +1,9 @@
 package com.example.board.domain.member;
 
 import com.example.board.domain.member.dto.LoginReq;
-import com.example.board.domain.member.dto.LogoutReq;
-import com.example.board.domain.member.dto.ReissueReq;
 import com.example.board.domain.member.dto.SignUpReq;
-import com.example.board.domain.member.dto.TokenResponse;
 import com.example.board.exception.ApiResponse;
+import com.example.board.security.jwt.dto.TokenResponse;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api") 
 @RequiredArgsConstructor
 public class MemberController {
-
     private final MemberService memberService;
 
     @PostMapping("/signup")
@@ -27,23 +24,14 @@ public class MemberController {
         return ResponseEntity.ok(ApiResponse.success("회원가입 성공", null));
     }
 
+    /**
+     * 로그인 API
+     * 성공 시, Body에 Access Token과 Refresh Token을 담아 반환합니다.
+     */
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<TokenResponse>> login(@RequestBody LoginReq loginReq) {
-        // 서비스의 login 메소드는 이제 TokenResponse를 반환
+        // 서비스의 login 메소드는 이제 TokenResponse를 반환합니다.
         TokenResponse response = memberService.login(loginReq);
         return ResponseEntity.ok(ApiResponse.success("로그인 성공", response));
     }
-  
-    @PostMapping("/reissue")
-    public ResponseEntity<ApiResponse<TokenResponse>>reissue(@RequestBody ReissueReq reissueReq) {
-        TokenResponse response = memberService.reissueToken(reissueReq.getRefreshToken());
-        return ResponseEntity.ok(ApiResponse.success("토큰재발급 성공", response));
-    }
-    
-    @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Void>> logout(@RequestBody LogoutReq logoutReq ){
-        memberService.logout(logoutReq.getRefreshToken());
-        return ResponseEntity.ok(ApiResponse.success("로그아웃 성공", null));
-    }
-    
 }
