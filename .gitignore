@@ -1,29 +1,55 @@
-node_modules
+############################
+#  Node / React Frontend
+############################
+# Dependencies
+frontend/node_modules/
 
-# .gitignore에 추가
-echo 'backend/.metadata/' >> .gitignore
+# Build output
+frontend/build/
+frontend/dist/
 
-# Git 캐시에서 제거
-git rm -r --cached backend/.metadata/
+# Testing coverage
+frontend/coverage/
 
-# 변경 반영
-git add .gitignore
-git commit -m "chore: .metadata 폴더 gitignore 처리"
+############################
+#  Java / Spring Boot Backend
+############################
+# Maven & Gradle build
+backend/target/
+backend/build/
+backend/.gradle/
 
-git config --global core.autocrlf true
-
-# Eclipse IDE 설정 및 캐시 무시
-.metadata/
-*.log
-*.swp
-*.tmp
-*.class
-
-# Eclipse metadata
+# Eclipse IDE metadata (백엔드용 워크스페이스 폴더)
 backend/.metadata/
+backend/.classpath
+backend/.project
+backend/.settings/
 
-# application-secret.properties 또는 application-dev.properties 와 같은
-# 민감한 정보를 담은 설정 파일은 Git에 올리지 않도록 제외합니다.
+############################
+#  IDE / Editors (공통)
+############################
+.idea/
+.vscode/
+*.suo
+*.sw?
+*.njsproj
+*.sln
+
+############################
+#  OS / System Files
+############################
+.DS_Store
+Thumbs.db
+
+############################
+#  Logs
+############################
+logs/
+*.log
+
+############################
+#  Environment & Secrets
+############################
+.env*
 application-*.properties
-
-echo ".metadata/" >> backend/.gitignorebackend/.metadata/
+node_modules

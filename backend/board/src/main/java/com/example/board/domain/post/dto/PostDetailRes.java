@@ -1,0 +1,44 @@
+package com.example.board.domain.post.dto;
+
+
+import com.example.board.domain.comment.dto.CommentRes;
+import com.example.board.domain.post.Post;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Getter
+public class PostDetailRes {
+	
+    private  Long postId;
+    private  String title;
+    private  String content;
+    private  String writerNickname;
+    private  List<CommentRes> comments;
+    
+    @Builder
+    private PostDetailRes(Long postId, String title, String content, String writerNickname,
+                         List<CommentRes> comments) {
+        this.postId = postId;
+        this.title = title;
+        this.content = content;
+        this.writerNickname = writerNickname;
+        this.comments = comments;
+    }
+    
+
+    public static PostDetailRes from(Post post) {
+        return PostDetailRes.builder()
+                .postId(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .writerNickname(post.getMember().getNickname())
+                .comments(post.getComments().stream()
+                        .map(CommentRes::from)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+    
+}

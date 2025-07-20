@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (token != null) {
             if (jwtUtil.validateToken(token)) {
-                // 토큰에서 email을 가져옵니다.
+                // 토큰에서 email을 가져오기
                 String email = jwtUtil.getEmailFromToken(token);
 
                 try {

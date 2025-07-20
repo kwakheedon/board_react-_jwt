@@ -25,13 +25,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	
+	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, length = 500)
-    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -40,15 +37,19 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+    
+    @Column(nullable = false, length = 500)
+    private String content;
 
     // 대댓글 부모
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
-
+    
     // 대댓글 자식
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
+
 
     @Builder
     public Comment(String content, Member member, Post post, Comment parent) {
@@ -57,5 +58,9 @@ public class Comment {
         this.post = post;
         this.parent = parent;
     }
-    
+
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
