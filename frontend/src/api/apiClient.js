@@ -15,9 +15,9 @@ const apiClient = axios.create({
 // error.config	에러가 난 요청의 config, 재요청 등에 활용
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token'); //클라이언트 로컬스토리지에서 Access Token 읽음
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // 요청 헤더에 붙임
+    const Token = localStorage.getItem('accessToken'); //클라이언트 로컬스토리지에서 Access Token 읽음
+    if (Token) {
+      config.headers.Authorization = `Bearer ${Token}`; // 요청 헤더에 붙임
     }
     return config;
   },
@@ -46,7 +46,7 @@ apiClient.interceptors.response.use(
         if (!refreshToken) {
             // refreshToken이 없으면 바로 로그아웃 처리
             console.log("No refresh token, logging out.");
-            localStorage.removeItem('token');
+            localStorage.removeItem('accessToken');  // 소문자 'accessToken' 으로 통일
             localStorage.removeItem('refreshToken');
             localStorage.removeItem('user');
             window.location.href = '/'; // 로그인 페이지로 이동
@@ -54,16 +54,13 @@ apiClient.interceptors.response.use(
         }
 
         // 백엔드의 /api/reissue 엔드포인트로 토큰 재발급 요청
-        // MemberController의 reissue 메서드와 통신합니다.
         const response = await axios.post('http://localhost:8089/api/api/reissue', { refreshToken });
 
-        // 백엔드 응답 형식에 따라 새로운 토큰을 추출합니다.
-        // { success: true, message: "...", data: { accessToken: "...", refreshToken: "..." } }
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data.data;
 
-        // 새로 발급받은 토큰들을 localStorage에 저장합니다.
-        localStorage.setItem('token', newAccessToken);
-        if (newRefreshToken) { // 서버가 새로운 리프레시 토큰을 주면 갱신
+        // 새로 발급받은 토큰들을 localStorage에 저장 (소문자 key로 통일)
+        localStorage.setItem('accessToken', newAccessToken);
+        if (newRefreshToken) {
             localStorage.setItem('refreshToken', newRefreshToken);
         }
 
@@ -74,10 +71,8 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
 
       } catch (refreshError) {
-        // 토큰 재발급 실패 시 (e.g., Refresh Token도 만료됨)
         console.error('Token refresh failed:', refreshError);
-        // 모든 토큰과 유저 정보를 삭제하고 로그아웃 처리합니다.
-        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');  // 소문자 'accessToken' 으로 통일
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('user');
         window.location.href = '/'; // 로그인 페이지로 이동
@@ -85,7 +80,6 @@ apiClient.interceptors.response.use(
       }
     }
 
-    // 401 에러가 아니거나, 재시도 플래그가 이미 설정된 경우는 에러를 그대로 반환합니다.
     return Promise.reject(error);
   }
 );

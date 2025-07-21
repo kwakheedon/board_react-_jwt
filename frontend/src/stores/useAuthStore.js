@@ -10,7 +10,7 @@ const initialFormData = {
 export const useAuthStore = create((set, get) => ({
   // 상태
   user: null,
-  isLoggedIn: false,
+  isLoggedIn: null,
   loading: false,
   error: null,
 
@@ -29,24 +29,41 @@ export const useAuthStore = create((set, get) => ({
 
   clearError: () => set({ error: null }),
 
-  openSignUpModal: () => set({ isSignUpModalOpen: true }),
-  closeSignUpModal: () => set({
-    isSignUpModalOpen: false,
-    error: null,
-    formData: { ...initialFormData }
-  }),
+  //모달열기
+  openSignUpModal: () =>
+    set({
+      isSignUpModalOpen: true,
+      isLoginModalOpen: false,
+      error: null,
+      formData: { ...initialFormData },
+    }),
 
-  openLoginModal: () => set({ isLoginModalOpen: true }),
-  closeLoginModal: () => set({
-    isLoginModalOpen: false,
-    error: null,
-    formData: { ...initialFormData }
-  }),
+    openLoginModal: () =>
+    set({
+      isLoginModalOpen: true,
+      isSignUpModalOpen: false,
+      error: null,
+      formData: { ...initialFormData },
+    }),
 
+  // 모달닫기
+  closeSignUpModal: () =>
+    set({
+      isSignUpModalOpen: false,
+      error: null,
+      formData: { ...initialFormData },
+    }),
+
+  closeLoginModal: () =>
+    set({
+      isLoginModalOpen: false,
+      error: null,
+      formData: { ...initialFormData },
+    }),
   setOpenLogoutModal: (val) => set({ openLogoutModal: val }),
   
- 
 
+// 회원가입
   signup: async () => {
     const { formData } = get();
     set({ loading: true, error: null });
@@ -55,22 +72,26 @@ export const useAuthStore = create((set, get) => ({
       await authApi.signup({
         email: formData.email,
         password: formData.password,
-        nickname: formData.nickname
+        nickname: formData.nickname,
       });
       set({
         loading: false,
         isSignUpModalOpen: false,
-        formData: { ...initialFormData }
+        formData: { ...initialFormData },
       });
       console.log('회원가입이 완료되었습니다!');
     } catch (error) {
       set({
         loading: false,
-        error: error.response?.data?.message || error.message || '회원가입에 실패했습니다.'
+        error:
+          error.response?.data?.message ||
+          error.message ||
+          '회원가입에 실패했습니다.',
       });
     }
   },
 
+  // 로그인
   login: async () => {
     const { formData } = get();
     set({ loading: true, error: null });
@@ -78,7 +99,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const response = await authApi.login({
         email: formData.email,
-        password: formData.password
+        password: formData.password,
       });
       const { accessToken, refreshToken } = response.data;
 
@@ -89,47 +110,68 @@ export const useAuthStore = create((set, get) => ({
         loading: false,
         isLoggedIn: true,
         isLoginModalOpen: false,
-        formData: { ...initialFormData }
+        user: response.data.user,
+        formData: { ...initialFormData },
       });
     } catch (error) {
       set({
         loading: false,
-        error: error.response?.data?.message || error.message || '로그인에 실패했습니다.'
+        error:
+          error.response?.data?.message ||
+          error.message ||
+          '로그인에 실패했습니다.',
+      });
+    }
+  },
+
+  // 로그아웃
+  logout: async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    try {
+      if (refreshToken) {
+        await authApi.logout(refreshToken);
+      }
+    } catch (error) {
+      console.error('로그아웃 API 호출 실패:', error);
+    } finally {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+
+      set({
+        isLoggedIn: false,
+        user: null,
+        formData: { ...initialFormData },
       });
     }
   },
 
 
   
-  logout: async () => {
-  const refreshToken = localStorage.getItem('refreshToken');
-  try {
-    if (refreshToken) {
-      await authApi.logout(refreshToken); 
+  // 인증 초기화
+initializeAuth: async () => {
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    try {
+      await authApi.verifyToken(token);
+      set({ isLoggedIn: true, accessToken: token, loading: false });
+      return true; 
+    } catch (error) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      set({
+        isLoggedIn: false,
+        accessToken: null,
+        loading: false,
+        error: error.response?.data?.message || error.message || '인증 실패',
+      });
+      return false; 
     }
-  } catch (error) {
-    console.error('로그아웃 API 호출 실패:', error);
-  } finally {
-    
-    //  클라이언트 상태 정리
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-
-    set({
-      isLoggedIn: false,
-      user: null,
-      formData: { ...initialFormData } 
-    });
+  } else {
+    set({ isLoggedIn: false, accessToken: null, loading: false });
+    return false;
   }
-},
+}
 
-  
-  initializeAuth: () => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      // 여기서 토큰 검증 API 호출 권장
-      set({ isLoggedIn: true });
-    }
-  }
 }));

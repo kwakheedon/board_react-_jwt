@@ -6,7 +6,8 @@ import MainLayout from '../components/layouts/MainLayout';
 
 // 페이지 컴포넌트
 import MainPage from '../pages/MainPage';
-
+import PostDetailPage from '../pages/PostDetailPage';
+import CreatePostPage from "../pages/CreatePostPage";
 const AppRouter = () => {
   return (
   <BrowserRouter>
@@ -17,7 +18,10 @@ const AppRouter = () => {
       {/* 공통 레이아웃이 필요한 페이지들 */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<MainPage />} />
+          <Route path="posts/create" element={<CreatePostPage />} />
+          <Route path="posts/:id" element={<PostDetailPage />} />
         {/* 기타 페이지들... */}
+      
         
       </Route>
     </Routes>

@@ -3,6 +3,9 @@
 ############################
 # Dependencies
 frontend/node_modules/
+# backend/board/.gitignore 또는 루트 .gitignore 에 추가
+target/
+
 
 # Build output
 frontend/build/

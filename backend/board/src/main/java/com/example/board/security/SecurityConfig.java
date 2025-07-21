@@ -45,7 +45,8 @@ public class SecurityConfig {
                 		 "/api/signup", 
                 		 "/api/reissue",
                 		 "/api/posts",
-                         "/api/posts/**").permitAll()
+                         "/api/posts/**",
+                         "/api/logout" ).permitAll()
                 .anyRequest().authenticated()
             );
             
