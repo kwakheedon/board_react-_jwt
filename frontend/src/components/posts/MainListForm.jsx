@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react';
 import { usePostStore } from '../../stores/usePostStore';
-import PostListView from './PostListView'; // PostListView를 사용
+import MainListView from './MainListView';
 
-const PostListForm = () => {
+const MainListForm = () => {
   const { posts, loading, error, loadPosts } = usePostStore();
 
-  useEffect(() => {
+    useEffect(() => {
     loadPosts();
   }, [loadPosts]);
 
   if (loading) return <div>로딩중...</div>;
   if (error) return <div>에러 발생: {error}</div>;
-  
-  return <PostListView posts={posts} />; // PostListView에 데이터 전달
+   console.log(" MainPage posts:", posts); 
+   
+  return  <MainListView posts={posts} />;
 }
 
-export default PostListForm;
+export default MainListForm

@@ -8,6 +8,10 @@ import MainLayout from '../components/layouts/MainLayout';
 import MainPage from '../pages/MainPage';
 import PostDetailPage from '../pages/PostDetailPage';
 import CreatePostPage from "../pages/CreatePostPage";
+import PostListPage from '../pages/PostListPage'; 
+
+
+
 const AppRouter = () => {
   return (
   <BrowserRouter>
@@ -20,7 +24,10 @@ const AppRouter = () => {
         <Route index element={<MainPage />} />
           <Route path="posts/create" element={<CreatePostPage />} />
           <Route path="posts/:id" element={<PostDetailPage />} />
-        {/* 기타 페이지들... */}
+          <Route path="/posts" element={<PostListPage />} />
+      
+
+
       
         
       </Route>

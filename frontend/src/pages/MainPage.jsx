@@ -1,12 +1,19 @@
 import React from 'react';
-import PostListForm from '../components/posts/PostListForm';
+import { Link } from 'react-router-dom';
+import MainListForm from '../components/posts/MainListForm';
+
 const MainPage = () => {
-  return (
-    <main>
-      <h1>메인 페이지</h1>
-      <PostListForm />  
-    </main>
-  );
+return (
+  <div>
+  <h1>메인페이지</h1>
+
+  <div>
+  <h2>최근 게시글</h2>
+  <MainListForm />
+  <Link to="/posts">더보기</Link>
+  </div>
+  </div>
+);
 };
 
 export default MainPage;

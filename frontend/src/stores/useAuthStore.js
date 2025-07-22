@@ -101,6 +101,7 @@ export const useAuthStore = create((set, get) => ({
         email: formData.email,
         password: formData.password,
       });
+       console.log('login response.data:', response.data);  // 여기서 확인
       const { accessToken, refreshToken } = response.data;
 
       localStorage.setItem('accessToken', accessToken);

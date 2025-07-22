@@ -20,3 +20,9 @@ export const createPost = async (postData) => {
   console.log("createPost 응답 데이터:", response.data);
   return response.data;
 };
+
+//게시글수정
+export const updatePostById = async (postId, updateData) => {
+  const response = await apiClient.put(`/posts/${postId}`, updateData);
+  return response.data; 
+};
