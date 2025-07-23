@@ -94,6 +94,8 @@ public class PostService {
 	    Post post = postRepository.findById(postId)
 	            .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND, "해당 게시글을 찾을 수 없습니다."));
 	    
+	    
+	    
 	    if (!post.getMember().getEmail().equals(email)) {
 	        throw new CustomException(ErrorCode.DELETE_NOT_UPDATE, "게시글 삭제 권한이 없습니다.");
 	    }

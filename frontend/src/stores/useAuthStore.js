@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { authApi } from '../api/authApi';
+import { signup as signupApi, login as loginApi, logout as logoutApi } from '../api/authApi';
 
 const initialFormData = {
   email: '',
@@ -8,171 +8,86 @@ const initialFormData = {
 };
 
 export const useAuthStore = create((set, get) => ({
-  // 상태
   user: null,
-  isLoggedIn: null,
+  isLoggedIn: false,
   loading: false,
   error: null,
-
   isSignUpModalOpen: false,
   isLoginModalOpen: false,
   openLogoutModal: false,
-
-
-
   formData: { ...initialFormData },
 
-  // 액션
-  setFormData: (data) => set(state => ({
-    formData: { ...state.formData, ...data }
-  })),
-
+  setFormData: (data) => set(state => ({ formData: { ...state.formData, ...data } })),
   clearError: () => set({ error: null }),
-
-  //모달열기
-  openSignUpModal: () =>
-    set({
-      isSignUpModalOpen: true,
-      isLoginModalOpen: false,
-      error: null,
-      formData: { ...initialFormData },
-    }),
-
-    openLoginModal: () =>
-    set({
-      isLoginModalOpen: true,
-      isSignUpModalOpen: false,
-      error: null,
-      formData: { ...initialFormData },
-    }),
-
-  // 모달닫기
-  closeSignUpModal: () =>
-    set({
-      isSignUpModalOpen: false,
-      error: null,
-      formData: { ...initialFormData },
-    }),
-
-  closeLoginModal: () =>
-    set({
-      isLoginModalOpen: false,
-      error: null,
-      formData: { ...initialFormData },
-    }),
+  openSignUpModal: () => set({ isSignUpModalOpen: true, isLoginModalOpen: false, error: null, formData: { ...initialFormData } }),
+  openLoginModal: () => set({ isLoginModalOpen: true, isSignUpModalOpen: false, error: null, formData: { ...initialFormData } }),
+  closeSignUpModal: () => set({ isSignUpModalOpen: false, error: null, formData: { ...initialFormData } }),
+  closeLoginModal: () => set({ isLoginModalOpen: false, error: null, formData: { ...initialFormData } }),
   setOpenLogoutModal: (val) => set({ openLogoutModal: val }),
-  
 
-// 회원가입
   signup: async () => {
     const { formData } = get();
     set({ loading: true, error: null });
-
     try {
-      await authApi.signup({
+      await signupApi({
         email: formData.email,
         password: formData.password,
         nickname: formData.nickname,
       });
-      set({
-        loading: false,
-        isSignUpModalOpen: false,
-        formData: { ...initialFormData },
-      });
+      set({ loading: false, isSignUpModalOpen: false, formData: { ...initialFormData } });
       console.log('회원가입이 완료되었습니다!');
     } catch (error) {
-      set({
-        loading: false,
-        error:
-          error.response?.data?.message ||
-          error.message ||
-          '회원가입에 실패했습니다.',
-      });
+      set({ loading: false, error: error.response?.data?.message || error.message || '회원가입에 실패했습니다.' });
     }
   },
 
-  // 로그인
-  login: async () => {
+ login: async () => {
     const { formData } = get();
     set({ loading: true, error: null });
-
     try {
-      const response = await authApi.login({
-        email: formData.email,
-        password: formData.password,
-      });
-       console.log('login response.data:', response.data);  // 여기서 확인
-      const { accessToken, refreshToken } = response.data;
+      const apiResponse = await loginApi({ email: formData.email, password: formData.password });
 
+      //  API 응답 객체에서 .data 속성에 접근하여 실제 데이터를 가져옵니다.
+      const { accessToken, refreshToken, userId, nickname, email } = apiResponse.data;
+      
+      const user = { userId, nickname, email };
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
-
-      set({
-        loading: false,
-        isLoggedIn: true,
-        isLoginModalOpen: false,
-        user: response.data.user,
-        formData: { ...initialFormData },
-      });
+      localStorage.setItem('user', JSON.stringify(user));
+      set({ loading: false, isLoggedIn: true, isLoginModalOpen: false, user: user, formData: { ...initialFormData } });
     } catch (error) {
-      set({
-        loading: false,
-        error:
-          error.response?.data?.message ||
-          error.message ||
-          '로그인에 실패했습니다.',
-      });
+      // 서버에서 오는 에러 메시지를 더 정확하게 표시하도록 수정
+      const errorMessage = error.response?.data?.message || error.message || '로그인 실패';
+      set({ loading: false, error: errorMessage });
     }
   },
 
-  // 로그아웃
   logout: async () => {
     const refreshToken = localStorage.getItem('refreshToken');
-
     try {
-      if (refreshToken) {
-        await authApi.logout(refreshToken);
-      }
+      if (refreshToken) await logoutApi(refreshToken);
     } catch (error) {
       console.error('로그아웃 API 호출 실패:', error);
     } finally {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
-
-      set({
-        isLoggedIn: false,
-        user: null,
-        formData: { ...initialFormData },
-      });
+      set({ isLoggedIn: false, user: null, formData: { ...initialFormData } });
     }
   },
 
-
-  
-  // 인증 초기화
-initializeAuth: async () => {
-  const token = localStorage.getItem('accessToken');
-  if (token) {
-    try {
-      await authApi.verifyToken(token);
-      set({ isLoggedIn: true, accessToken: token, loading: false });
-      return true; 
-    } catch (error) {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      set({
-        isLoggedIn: false,
-        accessToken: null,
-        loading: false,
-        error: error.response?.data?.message || error.message || '인증 실패',
-      });
-      return false; 
+  initializeAuth: () => {
+    const token = localStorage.getItem('accessToken');
+    const storedUser = localStorage.getItem('user');
+    if (token && storedUser) {
+      try {
+        set({ isLoggedIn: true, user: JSON.parse(storedUser) });
+      } catch (e) {
+        localStorage.clear();
+        set({ isLoggedIn: false, user: null });
+      }
+    } else {
+      set({ isLoggedIn: false, user: null });
     }
-  } else {
-    set({ isLoggedIn: false, accessToken: null, loading: false });
-    return false;
   }
-}
-
 }));

@@ -30,7 +30,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; //작성자ID
+    private Long id; //postID
 
     @Column(nullable = false, length = 200)
     private String title; //제목

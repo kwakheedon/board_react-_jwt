@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { usePostStore } from '../../stores/usePostStore';
-import PostListView from './PostListView'; // PostListView를 사용
+import PostListView from './PostListView'; 
 
 const PostListForm = () => {
   const { posts, loading, error, loadPosts } = usePostStore();

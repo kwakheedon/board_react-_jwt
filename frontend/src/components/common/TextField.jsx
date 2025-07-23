@@ -1,6 +1,7 @@
 import React from 'react';
 
 const TextField = ({
+  multiline = false,
   type = 'text',
   name,
   value,
@@ -11,6 +12,21 @@ const TextField = ({
   className = '',
   ...rest
 }) => {
+  if (multiline) {
+    return (
+      <textarea
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        required={required}
+        disabled={disabled}
+        className={`text-field ${className}`}
+        {...rest}
+      />
+    );
+  }
+
   return (
     <input
       type={type}

@@ -46,7 +46,8 @@ public class SecurityConfig {
                 		 "/api/reissue",
                 		 "/api/posts",
                          "/api/posts/**",
-                         "/api/logout" ).permitAll()
+                         "/api/logout",
+                         "/api/comments/**").permitAll()
                 .anyRequest().authenticated()
             );
             
@@ -63,7 +64,7 @@ public class SecurityConfig {
         
         // 허용할 프론트엔드 Origin 설정 (예: http://localhost:3000)
         configuration.setAllowedOrigins(List.of(
-        	    "http://localhost:3000")); 
+        	    "http://localhost:3001")); 
         
         // 허용할 HTTP 메서드 (GET, POST, 등)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));

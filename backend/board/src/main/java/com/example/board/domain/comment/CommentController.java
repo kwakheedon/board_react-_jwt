@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.board.domain.comment.dto.CommentReq;
 import com.example.board.domain.comment.dto.CommentRes;
+import com.example.board.domain.comment.dto.CommentRespons;
 import com.example.board.domain.comment.dto.CommentUpdateReq;
 import com.example.board.exception.ApiResponse;
 import com.example.board.security.jwt.CustomUserDetails;
@@ -28,13 +29,14 @@ public class CommentController {
 	private final CommentService commentService;
 	
 	///댓글생성
-	@PostMapping("/comments") 
-    public ResponseEntity<ApiResponse<Void>> createComment( 
+    @PostMapping("/comments")
+    public ResponseEntity<ApiResponse<CommentRespons>> createComment(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody CommentReq req) {
-        //서비스 메소드에 필요한 파라미터를 모두 전달
-        commentService.createComment(req, userDetails.getMember().getEmail());
-        return ResponseEntity.ok(ApiResponse.success("댓글 작성 성공", null));
+
+    	CommentRespons newComment = commentService.createComment(req, userDetails.getMember().getEmail());
+
+        return ResponseEntity.ok(ApiResponse.success("댓글 작성 성공", newComment));
     }
 
 	
@@ -47,14 +49,15 @@ public class CommentController {
 	
 	///댓글수정
 	@PatchMapping("/posts/{postId}/comments/{commentId}")
-	public ResponseEntity<ApiResponse<Void>> updateComment(
+	public ResponseEntity<ApiResponse<CommentRespons>> updateComment(
 	        @PathVariable Long postId,
 	        @PathVariable Long commentId,
-	        @RequestBody  CommentUpdateReq request,
+	        @RequestBody CommentUpdateReq request,
 	        @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-	    commentService.updateComment(commentId, postId, userDetails.getMember().getEmail(), request);
-	    return ResponseEntity.ok(ApiResponse.success("댓글 수정 성공", null));
+	    CommentRespons updatedComment = commentService.updateComment(commentId, postId, userDetails.getMember().getEmail(), request);
+
+	    return ResponseEntity.ok(ApiResponse.success("댓글 수정 성공", updatedComment));
 	}
 	
 	///댓글삭제

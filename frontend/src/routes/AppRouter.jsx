@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import '../assets/styles/global.css'; //  global.css가 있다면 경로 맞게 조정
+// import '../assets/styles/global.css';
 
 // 레이아웃 컴포넌트
 import MainLayout from '../components/layouts/MainLayout'; 
@@ -9,32 +9,25 @@ import MainPage from '../pages/MainPage';
 import PostDetailPage from '../pages/PostDetailPage';
 import CreatePostPage from "../pages/CreatePostPage";
 import PostListPage from '../pages/PostListPage'; 
-
+import UpdatePostPage from "../pages/UpdatePostPage";
 
 
 const AppRouter = () => {
   return (
-  <BrowserRouter>
-    <Routes>
-      {/* 로그인 레이아웃 없이 별도 */}
-
-
-      {/* 공통 레이아웃이 필요한 페이지들 */}
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<MainPage />} />
+    <BrowserRouter>
+      <Routes>
+        {/* 공통 레이아웃이 필요한 페이지들 */}
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<MainPage />} />
           <Route path="posts/create" element={<CreatePostPage />} />
-          <Route path="posts/:id" element={<PostDetailPage />} />
-          <Route path="/posts" element={<PostListPage />} />
-      
-
-
-      
-        
-      </Route>
-    </Routes>
-  </BrowserRouter>
+          {/* PostDetailPage에서 useParams로 'postId'를 사용하므로, :id를 :postId로 변경하여 일관성을 맞춥니다. */}
+          <Route path="posts/:postId" element={<PostDetailPage />} />
+          <Route path="posts" element={<PostListPage />} />
+          <Route path="posts/edit/:postId" element={<UpdatePostPage />} /> 
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
+
 export default AppRouter;
-
-

@@ -30,8 +30,11 @@ public class CommentRes {
                 .commentId(comment.getId())
                 .content(comment.getContent())
                 .writerNickname(comment.getMember().getNickname())
-                // 자식 댓글들을 CommentRes로 변환하여 리스트에 담습니다.
-                .children(comment.getChildren().stream().map(CommentRes::from).collect(Collectors.toList()))
+                .children(comment.getChildren().stream()
+                        .map(CommentRes::from) 
+                        .collect(Collectors.toList()))
                 .build();
     }
+    
+    
 }
