@@ -3,7 +3,7 @@ import { useAuthStore } from '../../stores/useAuthStore';
 import Button from '../common/Button';
 import TextField from '../common/TextField';
 
-const CommentForm = ({ postId, parentId = null, initialContent = '', onSubmit, onCancel, submitLabel = "등록" }) => {
+const CommentForm = ({ postId, parentId = null, initialContent = '', onSubmit, submitLabel = "등록" }) => {
     const [content, setContent] = useState(initialContent);
     const { isLoggedIn } = useAuthStore();
 
@@ -32,7 +32,6 @@ const CommentForm = ({ postId, parentId = null, initialContent = '', onSubmit, o
                 multiline  
             />
             <div>
-                {onCancel && <Button type="button" onClick={onCancel}>취소</Button>}
                 <Button type="submit">{submitLabel}</Button>
             </div>
         </form>

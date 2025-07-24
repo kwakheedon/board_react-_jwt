@@ -64,7 +64,7 @@ public class SecurityConfig {
         
         // 허용할 프론트엔드 Origin 설정 (예: http://localhost:3000)
         configuration.setAllowedOrigins(List.of(
-        	    "http://localhost:3001")); 
+        	    "http://localhost:3002")); 
         
         // 허용할 HTTP 메서드 (GET, POST, 등)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));

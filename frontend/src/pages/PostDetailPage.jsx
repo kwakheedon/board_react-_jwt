@@ -58,6 +58,8 @@ const PostDetailPage = () => {
     const handlePostSave = async (updateData) => {
         await updatePostById(Number(postId), updateData);
         setIsEditingPost(false); // 저장 후 '보기 모드'로 전환
+        alert("수정이 완료 되었습니다.")
+        await loadPostById(Number(postId));
     };
 
     // 게시글 삭제 핸들러

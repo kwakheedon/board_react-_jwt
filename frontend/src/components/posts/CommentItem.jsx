@@ -4,73 +4,83 @@ import { useCommentStore } from '../../stores/useCommentStore';
 import CommentForm from './CommentForm';
 import Button from '../common/Button';
 
+
 const CommentItem = ({ comment, postId }) => {
-    const { user: currentUser } = useAuthStore();
+
+  const { user: currentUser } = useAuthStore();
+  const { deleteComment, createComment } = useCommentStore();
+  
+  // '답글' 폼을 열고 닫기 위한 상태
+  const [isReplying, setIsReplying] = useState(false);
+
+  // 사용자가 현재 로그인 상태인지 확인합니다.
+  const isLoggedIn = !!currentUser;
+  
+  // 현재 로그인한 사용자가 이 댓글의 작성자인지 확인.
+  // (반드시 로그인 상태여야 하고, 사용자 ID가 일치)
+  const isAuthor = isLoggedIn && currentUser.userId === comment.writerId;
     
-    const { deleteComment, createComment } = useCommentStore();
+  // '삭제' 버튼 클릭 시 실행될 함수
+  const handleDelete = () => {
+    if (window.confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+      deleteComment({ commentId: comment.commentId, postId });
+    }
+  };
 
-    const [isReplying, setIsReplying] = useState(false);
+  // '댓글 등록' 버튼 클릭 시 실행될 함수
+  const handleReplySubmit = async (replyData) => {
+    await createComment(replyData);
+    setIsReplying(false); // 댓글 작성 후 폼을 닫습니다.
+  };
 
-    // 로그인 상태와 작성자 여부를 명확하게 확인하는 로직으로 수정
-    const isLoggedIn = !!currentUser; 
-    const isAuthor = isLoggedIn && currentUser.userId === comment.writerId;
+  // '답글 달기/취소' 버튼 클릭 시 실행될 함수
+  const toggleReplyForm = () => {
+    setIsReplying(!isReplying);
+  };
 
-    const handleDelete = () => {
-        if (window.confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
-            deleteComment({ commentId: comment.commentId, postId });
-        }
-    };
 
-    const handleReplySubmit = async (replyData) => {
-        await createComment(replyData);
-        setIsReplying(false);
-    };
+  return (
 
-    return (
-        <div style={{ marginLeft: comment.parentId ? '20px' : '0', borderLeft: comment.parentId ? '2px solid #eee' : 'none', paddingLeft: '10px', marginTop: '10px' }}>
-            <div>
-                <div>
-                    <p><strong>{comment.writerNickname}</strong></p>
-                    <p>{comment.content}</p>
-                </div>
+    <div>
+      <div>
+        {/* <p><strong>{comment.writerNickname}</strong></p> */}
+        <p>{comment.content}</p>
+      </div>
+      <div>
 
-                {isAuthor && (
-                    <div>
-                        <Button onClick={handleDelete}>삭제</Button>
-                    </div>
-                )}
-            </div>
+        {/* 로그인한 모든 사용자에게 '답글 달기' 버튼이 보입니다. */}
+        {isLoggedIn && (
+          <Button onClick={toggleReplyForm}>
+            {isReplying ? '댓글 취소' : '댓글 달기'}
+          </Button>
+        )}
+        {/* 로그인한 작성자 본인에게만 '삭제' 버튼이 보입니다. */}
+        {isAuthor && (
+          <Button onClick={handleDelete}>댓글삭제</Button>
+        )}
+      </div>
 
-            {/* 로그인한 사용자만 답글을 달 수 있도록 버튼을 제어합니다. */}
-            {currentUser && (
-                <Button onClick={() => setIsReplying(!isReplying)}>
-                    {isReplying ? '답글 취소' : '답글 달기'}
-                </Button>
-                
-            )}
-
-            {isReplying && (
-                <div>
-                    <CommentForm
-                        postId={postId}
-                        parentId={comment.commentId}
-                        onSubmit={handleReplySubmit}
-                        onCancel={() => setIsReplying(false)}
-                        submitLabel="답글 등록"
-                    />
-                </div>
-            )}
-
-            {/* 자식 댓글(대댓글)이 있으면 재귀적으로 렌더링합니다. */}
-            {comment.children && comment.children.length > 0 && (
-                <div>
-                    {comment.children.map(childComment => (
-                        <CommentItem key={childComment.commentId} comment={childComment} postId={postId} />
-                    ))}
-                </div>
-            )}
+      {isReplying && (
+        <div>
+          <CommentForm
+            postId={postId}
+            parentId={comment.commentId}
+            onSubmit={handleReplySubmit}
+            onCancel={toggleReplyForm}
+            submitLabel="댓글 등록"
+          />
         </div>
-    );
-};
+      )}
 
+      {/* Part 4: 자식 댓글 (대댓글) 목록 (재귀 호출) */}
+      {comment.children && comment.children.length > 0 && (
+        <div>
+          {comment.children.map(childComment => (
+            <CommentItem key={childComment.commentId} comment={childComment} postId={postId} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 export default CommentItem;

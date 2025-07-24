@@ -16,13 +16,14 @@ public class CommentRes {
     private  String content;
     private  String writerNickname;
     private List<CommentRes> children; // 자식 댓글 목록
-
+    private Long writerId;
 
     @Builder
-    private CommentRes(Long commentId, String content, String writerNickname) {
+    private CommentRes(Long commentId, String content, String writerNickname, Long writerId) {
         this.commentId = commentId;
         this.content = content;
         this.writerNickname = writerNickname;
+        this.writerId = writerId;
     }
 
     public static CommentRes from(Comment comment) {
@@ -33,6 +34,7 @@ public class CommentRes {
                 .children(comment.getChildren().stream()
                         .map(CommentRes::from) 
                         .collect(Collectors.toList()))
+                .writerId(comment.getMember().getId())
                 .build();
     }
     

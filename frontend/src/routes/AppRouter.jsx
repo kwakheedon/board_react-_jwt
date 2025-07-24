@@ -9,7 +9,6 @@ import MainPage from '../pages/MainPage';
 import PostDetailPage from '../pages/PostDetailPage';
 import CreatePostPage from "../pages/CreatePostPage";
 import PostListPage from '../pages/PostListPage'; 
-import UpdatePostPage from "../pages/UpdatePostPage";
 
 
 const AppRouter = () => {
@@ -23,7 +22,6 @@ const AppRouter = () => {
           {/* PostDetailPage에서 useParams로 'postId'를 사용하므로, :id를 :postId로 변경하여 일관성을 맞춥니다. */}
           <Route path="posts/:postId" element={<PostDetailPage />} />
           <Route path="posts" element={<PostListPage />} />
-          <Route path="posts/edit/:postId" element={<UpdatePostPage />} /> 
         </Route>
       </Routes>
     </BrowserRouter>
