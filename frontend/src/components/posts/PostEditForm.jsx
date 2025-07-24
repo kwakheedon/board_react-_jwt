@@ -14,32 +14,37 @@ const PostEditForm = ({ post, onSave, onCancel }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label htmlFor="title">제목</label>
-                <TextField
-                    id="title"
-                    name="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label htmlFor="content">내용</label>
-                <TextField
-                    id="content"
-                    name="content"
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <Button type="button" onClick={onCancel} >취소</Button>
-                <Button type="submit" >저장</Button>
-            </div>
-        </form>
+        <div className="create-form-container">
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label>제목</label>
+                    <TextField
+                        id="title"
+                        name="title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label>내용</label>
+                    <TextField
+                        id="content"
+                        name="content"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        multiline // 여러 줄 입력이 가능한 textarea로 변경
+                        required
+                        style={{ minHeight: '250px' }} // 높이를 글쓰기 폼과 유사하게 설정
+                    />
+                </div>
+                {/* 버튼을 감싸는 div 추가 */}
+                <div className="form-actions">
+                    <Button type="button" onClick={onCancel} className="toss-button-secondary">취소</Button>
+                    <Button type="submit">저장하기</Button>
+                </div>
+            </form>
+        </div>
     );
 };
 

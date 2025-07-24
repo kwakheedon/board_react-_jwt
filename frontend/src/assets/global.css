@@ -1,6 +1,3 @@
-/* ----------------------------------- */
-/* 1. 전역 변수 및 기본 설정 (Root & Reset) */
-/* ----------------------------------- */
 :root {
     /* Color Palette */
     --toss-blue: #3182f6;
@@ -57,7 +54,7 @@ ul {
 }
 
 /* ----------------------------------- */
-/* 2. 토스 스타일 버튼 (Toss Button)   */
+/* 1. 기본 버튼 (Button)                */
 /* ----------------------------------- */
 .toss-button {
     background-color: var(--toss-blue);
@@ -82,56 +79,17 @@ ul {
     cursor: not-allowed;
 }
 
-/* ----------------------------------- */
-/* 3. 마이페이지 레이아웃 (My Page Layout) */
-/* ----------------------------------- */
-.my-page-container {
-    width: 100%;
-    max-width: 768px; /* 너무 넓어지지 않도록 최대 너비 설정 */
-    margin: 0 auto;
-    padding: var(--spacing-xl) var(--spacing-lg);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md); /* 섹션 간 간격 */
-}
-
-.my-page-section {
-    background-color: var(--toss-white);
-    padding: var(--spacing-lg);
-    border-radius: 20px;
-}
-
-.my-page-header {
-    font-size: var(--font-size-xl);
-    font-weight: bold;
-    margin-bottom: var(--spacing-lg);
-}
-
-.my-page-menu-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--spacing-md) var(--spacing-sm); /* 상하 여백을 넉넉하게 */
-    border-radius: 12px;
-    font-size: var(--font-size-lg);
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-}
-
-.my-page-menu-item:hover {
-    background-color: var(--toss-highlight-bg);
-}
-
-.my-page-menu-item::after {
-    content: '>';
-    font-size: var(--font-size-lg);
+.toss-button-secondary {
+    background-color: var(--toss-gray-light);
     color: var(--toss-gray-dark);
 }
 
+.toss-button-secondary:hover {
+    background-color: #d8dce1; /* 살짝 더 진한 회색 */
+}
 
 /* ----------------------------------- */
-/* 4. 토스 스타일 모달 (Toss Modal)    */
+/* 2. 모달 (Modal)                     */
 /* ----------------------------------- */
 .modal-overlay {
     position: fixed;
@@ -144,14 +102,6 @@ ul {
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    
-    /* 애니메이션 */
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.modal-overlay.open {
-    opacity: 1;
 }
 
 .modal-content {
@@ -161,14 +111,6 @@ ul {
     width: 90%;
     max-width: 400px;
     position: relative;
-    
-    /* 애니메이션 */
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
-}
-
-.modal-overlay.open .modal-content {
-    transform: translateY(0);
 }
 
 .modal-close-button {
@@ -206,6 +148,9 @@ ul {
     line-height: 1.6;
 }
 
+/* ----------------------------------- */
+/* 3. 텍스트 필드 (Text Field)          */
+/* ----------------------------------- */
 .text-field {
     width: 100%;
     padding: 14px 16px;
@@ -225,17 +170,8 @@ textarea.text-field {
     resize: vertical;
 }
 
-.toss-button-secondary {
-    background-color: var(--toss-gray-light);
-    color: var(--toss-gray-dark);
-}
-
-.toss-button-secondary:hover {
-    background-color: #d8dce1; /* 살짝 더 진한 회색 */
-}
-
 /* ----------------------------------- */
-/* 6. 게시글 리스트 (Post List)       */
+/* 4. 게시글 목록 (Post List)           */
 /* ----------------------------------- */
 .post-list {
     display: flex;
@@ -256,6 +192,7 @@ textarea.text-field {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* PostListView.jsx의 h3, p에 적용 */
 .post-list-item h3 {
     font-size: var(--font-size-lg);
     font-weight: bold;
@@ -268,7 +205,7 @@ textarea.text-field {
 }
 
 /* ----------------------------------- */
-/* 7. 페이지 컨테이너 (Page Container)  */
+/* 5. 페이지 레이아웃 (Page Layout)     */
 /* ----------------------------------- */
 .page-container {
     width: 100%;
@@ -283,10 +220,66 @@ textarea.text-field {
     margin-bottom: var(--spacing-lg);
 }
 
+/* ----------------------------------- */
+/* 6. 게시글 생성/수정 (Post Form)      */
+/* ----------------------------------- */
+.create-form-container {
+    background-color: var(--toss-white);
+    padding: var(--spacing-xl);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.form-group label {
+    font-size: var(--font-size-md);
+    font-weight: 600;
+}
+
+.create-form-container textarea {
+    width: 100%;
+    min-height: 250px;
+    padding: 14px 16px;
+    font-size: var(--font-size-sm);
+    background-color: var(--toss-gray-bg);
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s ease-in-out;
+    resize: vertical;
+}
+
+.create-form-container textarea:focus {
+    border-color: var(--toss-blue);
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+.form-actions .toss-button {
+    width: auto;
+    flex-grow: 0;
+}
 
 /* ----------------------------------- */
-/* 8. 게시글 상세 (Post Detail)      */
+/* 7. 게시글 상세 (Post Detail)         */
 /* ----------------------------------- */
+.post-detail-view {
+    background-color: var(--toss-white);
+    padding: var(--spacing-xl);
+    border-radius: 20px;
+}
+
 .post-detail-header {
     margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-lg);
@@ -297,6 +290,7 @@ textarea.text-field {
     font-size: 32px;
     font-weight: bold;
     margin-bottom: var(--spacing-md);
+    line-height: 1.4;
 }
 
 .post-detail-meta {
@@ -308,6 +302,7 @@ textarea.text-field {
     display: flex;
     gap: var(--spacing-sm);
     margin-top: var(--spacing-md);
+    justify-content: flex-end;
 }
 
 .post-detail-content {
@@ -315,26 +310,42 @@ textarea.text-field {
     font-size: var(--font-size-md);
     line-height: 1.7;
     min-height: 200px;
+    word-break: keep-all;
 }
 
 /* ----------------------------------- */
-/* 9. 댓글 (Comments)                */
+/* 8. 댓글 (Comments)                  */
 /* ----------------------------------- */
 .comment-section {
     margin-top: var(--spacing-xl);
 }
 
-.comment-count {
-    font-size: var(--font-size-lg);
-    font-weight: bold;
-    margin-bottom: var(--spacing-md);
-}
-
 .comment-form {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
+}
+
+.comment-form textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 14px 16px;
+    font-size: var(--font-size-sm);
+    background-color: var(--toss-gray-bg);
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s ease-in-out;
+    resize: vertical;
+}
+
+.comment-form textarea:focus {
+    border-color: var(--toss-blue);
+}
+
+.comment-form div {
+   display: flex;
+   justify-content: flex-end;
 }
 
 .comment-list {
@@ -344,30 +355,38 @@ textarea.text-field {
 }
 
 .comment-item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-radius: 12px;
+    background-color: var(--toss-gray-bg);
+    display: flex; /* 하위 요소 정렬을 위해 추가 */
+    flex-direction: column; /* 하위 요소 정렬을 위해 추가 */
+    gap: var(--spacing-sm); /* 하위 요소 정렬을 위해 추가 */
 }
 
 .comment-item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.comment-author {
-    font-weight: bold;
+    margin-bottom: var(--spacing-sm);
 }
 
 .comment-content {
     color: #495057;
 }
 
-.comment-actions button {
+.comment-actions .toss-button {
+    width: auto;
     font-size: var(--font-size-xs);
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 8px;
+    background-color: var(--toss-gray-light);
     color: var(--toss-gray-dark);
-    padding: 4px 8px;
-    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.comment-actions .toss-button:hover {
+    background-color: #d8dce1;
 }
 
 .comment-item .comment-item {
@@ -377,6 +396,10 @@ textarea.text-field {
     border-left: 2px solid var(--toss-gray-light);
 }
 
+
+/* ----------------------------------- */
+/* 9. 메인 Swiper (Main Swiper)        */
+/* ----------------------------------- */
 .mySwiper {
   width: 100%;
   padding-top: 50px;
@@ -388,7 +411,6 @@ textarea.text-field {
   background-size: cover;
   width: 300px;
   height: 300px;
-  /* 카드 디자인 */
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -424,4 +446,54 @@ textarea.text-field {
 
 .card-content h3 {
     margin-bottom: 10px;
+}
+/* ----------------------------------- */
+/* 10. 헤더 (Header)                   */
+/* ----------------------------------- */
+.header {
+    padding: 16px 24px;
+    background-color: var(--toss-white);
+    border-bottom: 1px solid var(--toss-gray-light);
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-logo {
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.header-menu {
+    display: flex;
+    align-items: center; /* 버튼들을 세로 중앙 정렬 */
+    gap: 8px; /* 버튼 사이 간격 줄임 */
+}
+
+/* ----------------------------------- */
+/* 11. 3차 버튼 (Tertiary Button)      */
+/* ----------------------------------- */
+.toss-button-tertiary {
+    background-color: transparent;
+    color: var(--toss-gray-dark);
+    font-weight: 500;
+    width: 60px; 
+}
+
+.toss-button-tertiary:hover {
+    background-color: var(--toss-gray-bg);
+    color: var(--toss-black);
+    
+    
+}
+
+.header-menu .toss-button {
+    width: auto;
+    padding: 8px 20px;
 }

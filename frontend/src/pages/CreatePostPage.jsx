@@ -5,8 +5,8 @@ import CreateForm from '../components/posts/CreateForm'
 const CreatePostPage = () => {
 
   return (
-    <div>
-        <h1>글쓰기</h1>
+    <div className="page-container">
+        <h1 className="page-title" >글쓰기</h1>
         <CreateForm/>
        
     </div>

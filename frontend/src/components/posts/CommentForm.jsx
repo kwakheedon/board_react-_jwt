@@ -24,7 +24,7 @@ const CommentForm = ({ postId, parentId = null, initialContent = '', onSubmit, s
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="comment-form" >
             <TextField
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
