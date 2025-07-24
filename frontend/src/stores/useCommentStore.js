@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import {
   fetchByPostId,
   create as createCommentApi,
-  update as updateCommentApi,
   deleteComment,
 } from '../api/commentApi';
 
@@ -27,15 +26,6 @@ const removeCommentFromTree = (comments, commentId) => {
         return comment;
     }).filter(Boolean);
 };
-
-const updateCommentInTree = (comments, commentId, updatedContent) => {
-    return comments.map(comment => {
-        if (comment.commentId === commentId) return { ...comment, content: updatedContent };
-        if (comment.children) return { ...comment, children: updateCommentInTree(comment.children, commentId, updatedContent) };
-        return comment;
-    });
-};
-
 
 
 

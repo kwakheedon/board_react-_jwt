@@ -3,8 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
 import { usePostStore } from '../stores/usePostStore';
 import { useCommentStore } from '../stores/useCommentStore';
-import PostEditForm from '../components/posts/PostEditForm'; // 수정 폼 컴포넌트
-import PostDetailView from '../components/posts/PostDetailView'; // 상세 보기 컴포넌트
+import PostEditForm from '../components/posts/PostEditForm'; 
+import PostDetailView from '../components/posts/PostDetailView'; 
 import CommentForm from '../components/posts/CommentForm';
 import CommentList from '../components/posts/CommentList';
 
@@ -71,8 +71,7 @@ const PostDetailPage = () => {
     };
 
     return (
-        <div>
-            {/* 4. isEditingPost 상태에 따라 '수정 모드' 또는 '보기 모드'를 렌더링합니다. */}
+        <div className="page-container" >
             {isEditingPost ? (
                 <PostEditForm 
                     post={postDetail} 
@@ -89,7 +88,7 @@ const PostDetailPage = () => {
             )}
             
             {/* --- 댓글 섹션 --- */}
-            <div >
+            <div className="comment-section">
                 <CommentForm postId={Number(postId)} onSubmit={createComment} />
                 {commentsLoading ? (
                     <p>댓글 로딩 중...</p>

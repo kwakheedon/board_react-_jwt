@@ -4,10 +4,10 @@ import Button from '../common/Button';
 
 const CreateView = ({ title, content, onChangeTitle, onChangeContent, onSubmit }) => {
   return (
-    <div>
+    <div className="create-form-container" >
       <h2>게시글 작성</h2>
       <form onSubmit={onSubmit}>
-        <div>
+        <div className="form-group" >
           <label>제목</label>
           <TextField
             name="title"
@@ -17,7 +17,7 @@ const CreateView = ({ title, content, onChangeTitle, onChangeContent, onSubmit }
             required
           />
         </div>
-        <div>
+        <div className="form-group" >
           <label>내용</label>
           <textarea
             name="content"

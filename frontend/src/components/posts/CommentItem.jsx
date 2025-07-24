@@ -41,13 +41,11 @@ const CommentItem = ({ comment, postId }) => {
 
   return (
 
-    <div>
+    <div  className="comment-item" >
       <div>
-        {/* <p><strong>{comment.writerNickname}</strong></p> */}
-        <p>{comment.content}</p>
-      </div>
-      <div>
-
+        <p className="comment-content" >{comment.content}</p>
+      </div >
+      <div className="comment-actions" >
         {/* 로그인한 모든 사용자에게 '답글 달기' 버튼이 보입니다. */}
         {isLoggedIn && (
           <Button onClick={toggleReplyForm}>
@@ -58,10 +56,10 @@ const CommentItem = ({ comment, postId }) => {
         {isAuthor && (
           <Button onClick={handleDelete}>댓글삭제</Button>
         )}
-      </div>
+      </div >
 
       {isReplying && (
-        <div>
+        <div className="comment-item-header" >
           <CommentForm
             postId={postId}
             parentId={comment.commentId}
@@ -74,7 +72,7 @@ const CommentItem = ({ comment, postId }) => {
 
       {/* Part 4: 자식 댓글 (대댓글) 목록 (재귀 호출) */}
       {comment.children && comment.children.length > 0 && (
-        <div>
+        <div className="comment-list" >
           {comment.children.map(childComment => (
             <CommentItem key={childComment.commentId} comment={childComment} postId={postId} />
           ))}

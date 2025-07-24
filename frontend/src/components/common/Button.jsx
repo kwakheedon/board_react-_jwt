@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const Button = ({
   type = 'button',
@@ -9,15 +10,18 @@ const Button = ({
   ...rest
 }) => {
   return (
-    <button
+    <motion.button 
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`btn ${className}`}
+      className={`toss-button ${className}`}
+      style={{ padding: '12px 24px', fontSize: 16 }}
+      whileHover={{ scale: 1.05}} // 마우스를 올렸을 때 5% 커짐
+      whileTap={{ scale: 0.95 }}   // 클릭했을 때 5% 작아짐
       {...rest}
     >
       {children}
-    </button>
+    </motion.button>
   );
 };
 

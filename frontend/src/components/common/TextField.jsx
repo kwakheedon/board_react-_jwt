@@ -12,34 +12,22 @@ const TextField = ({
   className = '',
   ...rest
 }) => {
+  const commonProps = {
+    name,
+    value,
+    onChange,
+    placeholder,
+    required,
+    disabled,
+    className: `text-field ${className}`, // 'text-field' 클래스 추가
+    ...rest
+  };
+
   if (multiline) {
-    return (
-      <textarea
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        required={required}
-        disabled={disabled}
-        className={`text-field ${className}`}
-        {...rest}
-      />
-    );
+    return <textarea {...commonProps} />;
   }
 
-  return (
-    <input
-      type={type}
-      name={name}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      required={required}
-      disabled={disabled}
-      className={`text-field ${className}`}
-      {...rest}
-    />
-  );
+  return <input type={type} {...commonProps} />;
 };
 
 export default TextField;
