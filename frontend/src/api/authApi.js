@@ -14,5 +14,5 @@ export const login = async (credentials) => {
 };
 
 export const logout = async (refreshToken) => {
-  await axios.post(`${API_BASE_URL}/logout`, { refreshToken });
+  await axios.post(`${API_BASE_URL}/logout`, {}, { withCredentials: true });
 };

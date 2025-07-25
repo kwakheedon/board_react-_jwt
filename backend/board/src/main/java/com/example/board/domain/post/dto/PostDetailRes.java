@@ -20,7 +20,7 @@ public class PostDetailRes {
     private List<CommentRes> comments;
 
     @Builder
-    private PostDetailRes(Long postId, String title, String content, String writerNickname, Long writerId, List<CommentRes> comments) { // ⬇️ 2. 빌더 생성자에 writerId 추가
+    private PostDetailRes(Long postId, String title, String content, String writerNickname, Long writerId, List<CommentRes> comments) { // 빌더 생성자에 writerId 추가
         this.postId = postId;
         this.title = title;
         this.content = content;

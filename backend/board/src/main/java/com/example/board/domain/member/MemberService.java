@@ -5,11 +5,13 @@ import com.example.board.domain.member.dto.SignUpReq;
 import com.example.board.domain.member.dto.TokenResponse;
 import com.example.board.exception.CustomException;
 import com.example.board.exception.ErrorCode;
+import com.example.board.security.jwt.CookieUtil;
 import com.example.board.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import jakarta.servlet.http.HttpServletResponse; 
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +19,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-
+    private final CookieUtil cookieUtil;
+    
     /// 회원가입
     @Transactional
     public void signup(SignUpReq request) {
@@ -36,7 +39,7 @@ public class MemberService {
 
     /// 로그인 
     @Transactional
-    public TokenResponse login(LoginReq loginReq) {
+    public TokenResponse login(LoginReq loginReq, HttpServletResponse response) {
         Member member = memberRepository.findByEmail(loginReq.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAIL, "이메일 또는 비밀번호가 일치하지 않습니다."));
 
@@ -44,12 +47,12 @@ public class MemberService {
             throw new CustomException(ErrorCode.LOGIN_FAIL, "이메일 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        return issueTokens(member); // 내부 issueTokens 메소드를 호출하도록 변경하여 코드 중복 제거
+        return issueTokens(member, response); 
     }
 
     /// 토큰 재발급
     @Transactional
-    public TokenResponse reissueToken(String refreshTokenValue) {
+    public TokenResponse reissueToken(String refreshTokenValue, HttpServletResponse response) {
         if (!jwtUtil.validateToken(refreshTokenValue)) {
             throw new CustomException(ErrorCode.INVALID_TOKEN, "유효하지 않은 리프레시 토큰입니다.");
         }
@@ -60,20 +63,19 @@ public class MemberService {
         if (!refreshTokenValue.equals(member.getRefreshToken())) {
             throw new CustomException(ErrorCode.INVALID_TOKEN, "토큰이 일치하지 않습니다.");
         }
-        return issueTokens(member);
+        return issueTokens(member, response);
     }
-
     ///[내부 로직] Access Token과 Refresh Token을 생성하고 Member 엔티티에 Refresh Token을 저장
     @Transactional
-    public TokenResponse issueTokens(Member member) {
+    public TokenResponse issueTokens(Member member, HttpServletResponse response) {
         String accessToken = jwtUtil.generateAccessToken(member.getEmail(), member.getRole());
         String newRefreshTokenValue = jwtUtil.generateRefreshToken(member.getEmail());
 
         member.updateRefreshToken(newRefreshTokenValue);
+        cookieUtil.addCookie(response, "refreshToken", newRefreshTokenValue, jwtUtil.getRefreshTokenExpirationMs());
 
         return new TokenResponse(
             accessToken,
-            newRefreshTokenValue,
             member.getId(),        
             member.getNickname(),  
             member.getEmail()      

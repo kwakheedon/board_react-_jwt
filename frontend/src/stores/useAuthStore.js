@@ -15,6 +15,7 @@ export const useAuthStore = create((set, get) => ({
   isSignUpModalOpen: false,
   isLoginModalOpen: false,
   openLogoutModal: false,
+  authInitialized: false,
   formData: { ...initialFormData },
 
   setFormData: (data) => set(state => ({ formData: { ...state.formData, ...data } })),
@@ -48,11 +49,10 @@ export const useAuthStore = create((set, get) => ({
       const apiResponse = await loginApi({ email: formData.email, password: formData.password });
 
       //  API 응답 객체에서 .data 속성에 접근하여 실제 데이터를 가져옵니다.
-      const { accessToken, refreshToken, userId, nickname, email } = apiResponse.data;
+      const { accessToken, userId, nickname, email } = apiResponse.data;
       
       const user = { userId, nickname, email };
       localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('user', JSON.stringify(user));
       set({ loading: false, isLoggedIn: true, isLoginModalOpen: false, user: user, formData: { ...initialFormData } });
     } catch (error) {
@@ -63,14 +63,12 @@ export const useAuthStore = create((set, get) => ({
   },
 
   logout: async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
     try {
-      if (refreshToken) await logoutApi(refreshToken);
+      await logoutApi();
     } catch (error) {
       console.error('로그아웃 API 호출 실패:', error);
     } finally {
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
       set({ isLoggedIn: false, user: null, formData: { ...initialFormData } });
     }
@@ -89,5 +87,8 @@ export const useAuthStore = create((set, get) => ({
     } else {
       set({ isLoggedIn: false, user: null });
     }
+    // 2. 모든 로직이 끝난 후, 인증 상태 확인이 완료되었음을 알립니다.
+    set({ authInitialized: true });
   }
 }));
+

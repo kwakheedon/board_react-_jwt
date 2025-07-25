@@ -6,6 +6,7 @@ import com.example.board.security.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -40,16 +41,11 @@ public class SecurityConfig {
 
         // 3. 경로별 접근 권한 설정
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", 
-                		 "/api/signup", 
-                		 "/api/reissue",
-                		 "/api/posts",
-                         "/api/posts/**",
-                         "/api/logout",
-                         "/api/comments/**").permitAll()
-                .anyRequest().authenticated()
-            );
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(HttpMethod.GET, "/api/posts/**", "/api/comments/**").permitAll() // GET 요청은 대부분 허용
+            .requestMatchers("/api/login", "/api/signup", "/api/reissue","/api/logout").permitAll() // 로그인/회원가입/재발급은 허용
+            .anyRequest().authenticated() // 나머지 요청은 인증 필요
+        );
             
         // 4. JWT 필터 추가
         http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil, customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
@@ -64,13 +60,13 @@ public class SecurityConfig {
         
         // 허용할 프론트엔드 Origin 설정 (예: http://localhost:3000)
         configuration.setAllowedOrigins(List.of(
-        	    "http://localhost:3000")); 
+        	    "http://localhost:3002")); 
         
         // 허용할 HTTP 메서드 (GET, POST, 등)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         
         // 허용할 HTTP 헤더
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
         
         // 자격 증명(쿠키, 토큰 등)을 포함한 요청 허용
         configuration.setAllowCredentials(true);

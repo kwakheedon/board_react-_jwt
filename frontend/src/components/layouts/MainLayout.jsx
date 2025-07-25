@@ -12,9 +12,9 @@ const MainLayout = () => {
     <div>
       <Header />
       <AnimatePresence>
-      <SignUpForm /> 
-      <LoginForm /> 
-      <Logout />
+      <SignUpForm key="signup" /> 
+      <LoginForm key="login"/> 
+      <Logout key="logout" />
       </AnimatePresence>
       <main>
         <Outlet />

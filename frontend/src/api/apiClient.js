@@ -7,6 +7,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,  // 모든 요청에 쿠키를 포함
 });
 
 // JWT 만료 여부 확인 함수
@@ -23,41 +24,29 @@ const isTokenExpired = (jwtToken) => {
 
 
 async function getNewToken() {
-  try {
-    const storedRefreshToken = localStorage.getItem('refreshToken');
-    if (!storedRefreshToken) {
-      throw new Error('No refresh token available.');
-    }
-
-    const response = await axios.post(`${API_BASE_URL}/reissue`, {
-      refreshToken: storedRefreshToken,
-    });
+   try {
+    const response = await axios.post(`${API_BASE_URL}/reissue`, 
+      {}, // 서버로 빈 객체를 보냄
+      { withCredentials: true } //재발급 요청에도 쿠키를 포함
+    );
 
     const {
       accessToken: newAccessToken,
-      refreshToken: newRefreshToken,
     } = response.data.data;
 
-    localStorage.setItem('accessToken', newAccessToken);
-    if (newRefreshToken) {
-      localStorage.setItem('refreshToken', newRefreshToken);
-    }
+
+ localStorage.setItem('accessToken', newAccessToken);
+    // 로컬 스토리지에 리프레시 토큰을 저장하는 코드를 삭제합니다.
     return newAccessToken;
   } catch (error) {
     console.error('Token refresh failed:', error);
 
-    // 토큰 갱신이 401 에러로 실패한 경우,
-    // 이 때만 클라이언트 측에서 로그아웃 처리를 하고 페이지를 새로고침
     if (error.response && error.response.status === 401) {
       console.log('Refresh token invalid, logging out.');
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
-      window.location.href = '/'; // 로그인 페이지로 이동
+      window.location.href = '/'; 
     }
-
-    // 다른 종류의 에러(서버 500 에러, 네트워크 문제 등)는
-    // 즉시 로그아웃 처리하지 않고 에러를 그대로 반환
     return Promise.reject(error);
   }
 }

@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment; // Environment 임포트
@@ -18,7 +19,8 @@ import java.util.Objects;
 
 @Slf4j(topic = "JwtUtil")
 @Component
-@RequiredArgsConstructor // final 필드에 대한 생성자 자동 주입
+@RequiredArgsConstructor 
+@Getter
 public class JwtUtil {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
@@ -43,11 +45,10 @@ public class JwtUtil {
         this.signingKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // AccessToken 생성
+ // AccessToken 생성
     public String generateAccessToken(String email, Role role) {
         Date now = new Date();
         Claims claims = Jwts.claims().setSubject(email);
-        // role.getKey() 대신 role.name()을 사용
         claims.put(AUTHORIZATION_KEY, role.name());
 
         return Jwts.builder()
