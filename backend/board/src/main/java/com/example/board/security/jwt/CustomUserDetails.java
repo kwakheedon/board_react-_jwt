@@ -31,11 +31,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        // Spring Security에서 유일한 식별자를 의미. 여기서는 email을 사용
         return member.getEmail();
     }
 
-    // 계정 상태 관련 설정 (필요에 따라 Member 엔티티 필드와 연동)
     @Override public boolean isAccountNonExpired() { return true; }
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }

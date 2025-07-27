@@ -35,7 +35,7 @@ public class Member {
     private Role role;
     
     
-    @Column(length = 500) // 토큰 길이를 고려하여 충분한 길이 설정
+    @Column(length = 500) 
     private String refreshToken;
 
     // 리프레시 토큰을 간단히 갱신하는 헬퍼(helper) 메서드

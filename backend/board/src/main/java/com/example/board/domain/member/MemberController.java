@@ -32,14 +32,14 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<TokenResponse>> login(@RequestBody LoginReq loginReq,HttpServletResponse response) {
-        // 서비스의 login 메소드는 이제 TokenResponse를 반환
+      
     	TokenResponse tokenResponse  = memberService.login(loginReq, response);
         return ResponseEntity.ok(ApiResponse.success("로그인 성공", tokenResponse));
     }
   
     @PostMapping("/reissue")
     public ResponseEntity<ApiResponse<TokenResponse>>reissue(@CookieValue("refreshToken") String refreshToken, HttpServletResponse response) {
-        TokenResponse tokenResponse = memberService.reissueToken(refreshToken, response); // response 객체 전달
+        TokenResponse tokenResponse = memberService.reissueToken(refreshToken, response); 
         return ResponseEntity.ok(ApiResponse.success("토큰재발급 성공", tokenResponse));
     }
     

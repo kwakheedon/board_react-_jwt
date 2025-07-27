@@ -24,7 +24,7 @@ public class PostReq {
         return Post.builder()
                 .title(this.title)
                 .content(this.content)
-                .member(member) // 파라미터로 받은 Member 객체 사용
+                .member(member) 
                 .build();
     }
     

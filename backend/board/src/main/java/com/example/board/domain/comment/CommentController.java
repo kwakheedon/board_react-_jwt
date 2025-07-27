@@ -27,47 +27,42 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CommentController {
 	private final CommentService commentService;
-	
-	///댓글생성
-    @PostMapping("/comments")
-    public ResponseEntity<ApiResponse<CommentRespons>> createComment(
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            @RequestBody CommentReq req) {
 
-    	CommentRespons newComment = commentService.createComment(req, userDetails.getMember().getEmail());
+	/// 댓글생성
+	@PostMapping("/comments")
+	public ResponseEntity<ApiResponse<CommentRespons>> createComment(
+			@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody CommentReq req) {
 
-        return ResponseEntity.ok(ApiResponse.success("댓글 작성 성공", newComment));
-    }
+		CommentRespons newComment = commentService.createComment(req, userDetails.getMember().getEmail());
 
-	
-	///댓글조회 
+		return ResponseEntity.ok(ApiResponse.success("댓글 작성 성공", newComment));
+	}
+
+	/// 댓글조회
 	@GetMapping("/posts/{postId}/comments")
 	public ResponseEntity<ApiResponse<List<CommentRes>>> readComments(@PathVariable Long postId) {
-	    List<CommentRes> commentList = commentService.readComments(postId);
-	    return ResponseEntity.ok(ApiResponse.success("댓글 조회 성공", commentList));
+		List<CommentRes> commentList = commentService.readComments(postId);
+		return ResponseEntity.ok(ApiResponse.success("댓글 조회 성공", commentList));
 	}
-	
-	///댓글수정
+
+	/// 댓글수정
 	@PatchMapping("/posts/{postId}/comments/{commentId}")
-	public ResponseEntity<ApiResponse<CommentRespons>> updateComment(
-	        @PathVariable Long postId,
-	        @PathVariable Long commentId,
-	        @RequestBody CommentUpdateReq request,
-	        @AuthenticationPrincipal CustomUserDetails userDetails) {
+	public ResponseEntity<ApiResponse<CommentRespons>> updateComment(@PathVariable Long postId,
+			@PathVariable Long commentId, @RequestBody CommentUpdateReq request,
+			@AuthenticationPrincipal CustomUserDetails userDetails) {
 
-	    CommentRespons updatedComment = commentService.updateComment(commentId, postId, userDetails.getMember().getEmail(), request);
+		CommentRespons updatedComment = commentService.updateComment(commentId, postId,
+				userDetails.getMember().getEmail(), request);
 
-	    return ResponseEntity.ok(ApiResponse.success("댓글 수정 성공", updatedComment));
+		return ResponseEntity.ok(ApiResponse.success("댓글 수정 성공", updatedComment));
 	}
-	
-	///댓글삭제
+
+	/// 댓글삭제
 	@DeleteMapping("/posts/{postId}/comments/{commentId}")
-	public ResponseEntity<ApiResponse<Void>> deleteComment(
-	        @PathVariable Long postId,
-	        @PathVariable Long commentId,
-	        @AuthenticationPrincipal CustomUserDetails userDetails) {
-	    
-	    commentService.deleteComment(commentId, postId, userDetails.getMember().getEmail());
-	    return ResponseEntity.ok(ApiResponse.success("댓글 삭제 성공", null));
+	public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long postId, @PathVariable Long commentId,
+			@AuthenticationPrincipal CustomUserDetails userDetails) {
+
+		commentService.deleteComment(commentId, postId, userDetails.getMember().getEmail());
+		return ResponseEntity.ok(ApiResponse.success("댓글 삭제 성공", null));
 	}
 }

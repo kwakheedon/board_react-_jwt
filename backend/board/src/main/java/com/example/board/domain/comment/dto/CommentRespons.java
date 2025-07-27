@@ -26,7 +26,7 @@ public class CommentRespons {
         this.writerId = comment.getMember().getId();
 
 
-        // 부모 댓글이 있는 경우, 부모 댓글의 ID를 설정합니다.
+        // 부모 댓글이 있는 경우, 부모 댓글의 ID를 설정
         if (comment.getParent() != null) {
             this.parentId = comment.getParent().getId();
         }
