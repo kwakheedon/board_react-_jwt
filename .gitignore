@@ -56,3 +56,4 @@ logs/
 .env*
 application-*.properties
 node_modules
+/.metadata/

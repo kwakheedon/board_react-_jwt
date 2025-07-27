@@ -8,7 +8,6 @@ import {
 // 대댓글 추가 헬퍼 함수
 const addReplyToComment = (comments, parentId, newReply) => {
     return comments.map(comment => {
-        //  comment.id 대신 comment.commentId 를 사용하도록 수정
         if (comment.commentId === parentId) {
             return { ...comment, children: [newReply, ...(comment.children || [])] };
         }
@@ -47,8 +46,6 @@ export const useCommentStore = create((set) => ({
       const response = await createCommentApi(commentData);
       const newComment = response.data;
       
-
-      //  newComment가 유효한 객체일 때만 상태를 업데이트하도록 검증
       if (newComment && typeof newComment === 'object' && newComment.commentId) {
         if (commentData.parentId) {
           set(state => ({ comments: addReplyToComment(state.comments, commentData.parentId, newComment) }));
@@ -57,7 +54,6 @@ export const useCommentStore = create((set) => ({
         }
         return newComment;
       } else {
-        // 유효하지 않은 응답에 대한 처리
         console.error("댓글 생성 API는 성공했으나, 유효하지 않은 데이터가 반환되었습니다.", response);
         throw new Error('서버로부터 유효한 댓글 데이터를 받지 못했습니다.');
       }

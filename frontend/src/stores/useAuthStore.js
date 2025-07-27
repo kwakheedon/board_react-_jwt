@@ -48,7 +48,7 @@ export const useAuthStore = create((set, get) => ({
     try {
       const apiResponse = await loginApi({ email: formData.email, password: formData.password });
 
-      //  API 응답 객체에서 .data 속성에 접근하여 실제 데이터를 가져옵니다.
+
       const { accessToken, userId, nickname, email } = apiResponse.data;
       
       const user = { userId, nickname, email };
@@ -56,7 +56,6 @@ export const useAuthStore = create((set, get) => ({
       localStorage.setItem('user', JSON.stringify(user));
       set({ loading: false, isLoggedIn: true, isLoginModalOpen: false, user: user, formData: { ...initialFormData } });
     } catch (error) {
-      // 서버에서 오는 에러 메시지를 더 정확하게 표시하도록 수정
       const errorMessage = error.response?.data?.message || error.message || '로그인 실패';
       set({ loading: false, error: errorMessage });
     }
@@ -87,7 +86,6 @@ export const useAuthStore = create((set, get) => ({
     } else {
       set({ isLoggedIn: false, user: null });
     }
-    // 2. 모든 로직이 끝난 후, 인증 상태 확인이 완료되었음을 알립니다.
     set({ authInitialized: true });
   }
 }));

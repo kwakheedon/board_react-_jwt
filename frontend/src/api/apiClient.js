@@ -34,9 +34,8 @@ async function getNewToken() {
       accessToken: newAccessToken,
     } = response.data.data;
 
-
  localStorage.setItem('accessToken', newAccessToken);
-    // 로컬 스토리지에 리프레시 토큰을 저장하는 코드를 삭제합니다.
+
     return newAccessToken;
   } catch (error) {
     console.error('Token refresh failed:', error);
@@ -77,7 +76,7 @@ apiClient.interceptors.request.use(
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          //  2. 분리된 함수를 호출하여 재발급 로직 간소화
+          //  분리된 함수를 호출하여 재발급 로직 간소화
           const newAccessToken = await getNewToken();
           processQueue(null, newAccessToken);
           config.headers.Authorization = `Bearer ${newAccessToken}`;
@@ -126,7 +125,7 @@ apiClient.interceptors.response.use(
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          //  3. 응답 인터셉터에서도 동일한 함수를 호출
+          // 응답 인터셉터에서도 동일한 함수를 호출
           const newAccessToken = await getNewToken();
           processQueue(null, newAccessToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

@@ -12,7 +12,7 @@ const PostListForm = () => {
   if (loading) return <div>로딩중...</div>;
   if (error) return <div>에러 발생: {error}</div>;
   
-  return <PostListView posts={posts} />; // PostListView에 데이터 전달
+  return <PostListView posts={posts} />;
 }
 
 export default PostListForm;

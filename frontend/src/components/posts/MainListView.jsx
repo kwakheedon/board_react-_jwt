@@ -36,6 +36,7 @@ const MainListView = ({ posts }) => {
         modifier: 1,
         slideShadows: true,
       }}
+      
       // 자동 재생 옵션을 추가
       autoplay={{
         delay: 1500, // 2.5초마다 넘어갑니다.

@@ -19,7 +19,7 @@ const TextField = ({
     placeholder,
     required,
     disabled,
-    className: `text-field ${className}`, // 'text-field' 클래스 추가
+    className: `text-field ${className}`, 
     ...rest
   };
 
