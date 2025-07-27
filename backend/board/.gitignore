@@ -13,3 +13,23 @@ backend/.metadata/
 application-*.properties
 
 echo ".metadata/" >> backend/.gitignore
+
+### VS Code ###
+.vscode/
+# Java & Maven
+target/
+*.log
+
+# IDE
+.classpath
+.project
+.factorypath
+.settings/
+
+# Maven wrapper (선택)
+.mvn/
+mvnw
+mvnw.cmd
+
+# 기타
+HELP.md
