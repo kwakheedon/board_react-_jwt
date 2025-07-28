@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class CommentRes {
 
 	private  Long commentId;
@@ -19,10 +18,11 @@ public class CommentRes {
     private Long writerId;
 
     @Builder
-    private CommentRes(Long commentId, String content, String writerNickname, Long writerId) {
+    public CommentRes(Long commentId, String content, String writerNickname, Long writerId, List<CommentRes> children) {
         this.commentId = commentId;
         this.content = content;
         this.writerNickname = writerNickname;
+        this.children = children;
         this.writerId = writerId;
     }
 
@@ -37,6 +37,5 @@ public class CommentRes {
                 .writerId(comment.getMember().getId())
                 .build();
     }
-    
     
 }
